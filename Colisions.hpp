@@ -1,6 +1,6 @@
 #pragma once
 #include "includes.h"
-#include "log.h"
+#include "log.hpp"
 
 namespace game {
 	class Colisions
