@@ -1,6 +1,6 @@
 #pragma once
 #include "includes.h"
-#include "colorAttributes.h"
+#include "colorAttributes.hpp"
 
 namespace game
 {
