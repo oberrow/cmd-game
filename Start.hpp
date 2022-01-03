@@ -1,6 +1,6 @@
 #include "includes.h"
 #include "movements.h"
-#include "log.h"
+#include "log.hpp"
 #include "place.hpp"
 #include "Colisions.h"
 #pragma once
