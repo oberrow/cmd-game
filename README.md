@@ -5,7 +5,8 @@
 
 1. Press the keys "W", "A", "S" and "D" to move up press "W" to move down press "S" to move to the right press "D" and to move to the left press "A"
 2. To place water press "P", to place bedrock press "B", to place grass/leaves press "G", to place rocks press "R" and to place logs press "L"
-3. to generate everything press any of the keys to move
+3. To remove something press backspace 
+4. to generate everything press any of the keys to move
 
 
 ##  Known issues
