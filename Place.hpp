@@ -1,7 +1,7 @@
 #pragma once
 #include "includes.h"
-#include "colorAttributes.h"
-#include "movements.h"
+#include "colorAttributes.hpp"
+#include "movements.hpp"
 
 namespace game {
 	class Place {
