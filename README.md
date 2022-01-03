@@ -15,3 +15,6 @@
 ## Notes
 ### -------------------------------------------------------------------------------------------------------
 1. if the memory usage goes above 15 mb the program will terminate (intentional feature) if this happens try to debug the program and make a bug report
+## Screenshots
+![Screenshot 2022-01-03 121957](https://user-images.githubusercontent.com/72581470/147960151-f2eb3844-31bc-4e82-8c08-1937ffee471c.png)
+![Screenshot 2022-01-03 121957](https://user-images.githubusercontent.com/72581470/147960364-dea6e036-38e7-4e6d-9562-91a01f8bb737.png)
