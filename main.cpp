@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "includes.hpp"
 #include "Start.hpp"
 
 
@@ -21,8 +21,12 @@ int main()
 	while(true)
 		game::Movements m(_getch(), buff);
 #elif 1
-	while(true)
-		game::Start s{ _getch() };
+	while (true) {
+		if (game::Start::ctrlc == true)
+			return 0;
+		else
+			game::Start s{ _getch() };
+	}
 #endif
 	return 0;
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                     

@@ -1,12 +1,13 @@
-#include "includes.h"
+#include "includes.hpp"
 #include "movements.hpp"
 #include "log.hpp"
 #include "place.hpp"
-#include "Colisions.h"
+#include "Colisions.hpp"
 #pragma once
 namespace game {
 	class Start {
 	public:
+		static inline bool ctrlc = false;
 		Log l{ Log::levelInfoId };
 		Start(int in)
 			:getchVal(in)

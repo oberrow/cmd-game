@@ -1,5 +1,5 @@
 #pragma once
-#include "includes.h"
+#include "includes.hpp"
 #include "colorAttributes.hpp"
 #include "movements.hpp"
 
@@ -13,92 +13,91 @@ namespace game {
 			switch (blockId) {
 			case 71:
 			{
-				colorAttributes color = 0x0A;
+				colorAttributes color = LIGHTGREEN;
 				std::cout << "[]";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
 			case 103:
 			{
-				colorAttributes color = 0x0A;
+				colorAttributes color = LIGHTGREEN;
 				std::cout << "[]";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
 			case 114:
 			{
-				colorAttributes color = 0x07;
+				colorAttributes color = LIGHTGRAY;
 				std::cout << "[]";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
 			case 82:
 			{
-				colorAttributes color = 0x07;
+				colorAttributes color = LIGHTGRAY;
 				std::cout << "[]";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
 			case 66:
 			{
-				colorAttributes color = 0x09;
+				colorAttributes color = LIGHTBLUE;
 				std::cout << "[]";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
 			case 98:
 			{
-				colorAttributes color = 0x09;
+				colorAttributes color = LIGHTBLUE;
 				std::cout << "[]";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
-			case 124:
+			case 76:
 			{
-				colorAttributes color = 0x06;
+				colorAttributes color = BROWN;
 				std::cout << "[]";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
 			case 108:
 			{
-				colorAttributes color = 0x06;
+				colorAttributes color = BROWN;
 				std::cout << "[]";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
 			case 112:
 			{
-				colorAttributes color = 0x01;
+				colorAttributes color = BLUE;
 				std::cout << "[]";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
 			case 80:
 			{
-				colorAttributes color = 0x01;
+				colorAttributes color = BLUE;
 				std::cout << "[]";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
-			case 122:
+			//case 122:
+			//{
+			//	colorAttributes color = BLACK;
+			//	const char* buffer = "\b \b \b \b";
+			//	buff.dwCursorPosition.X -= 2;
+
+			//	WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), buffer, 4, NULL, NULL);
+			//	Movements::coordCpy = buff.dwCursorPosition;
+
+			//	//SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), buff.dwCursorPosition);
+			//	break;
+			//}
+			case 8:
 			{
-				colorAttributes color = 0x00;
+				colorAttributes color = BLACK;
 				const char* buffer = "\b \b \b \b";
 				buff.dwCursorPosition.X -= 2;
-
-				WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), buffer, 4, NULL, NULL);
-				Movements::coordCpy = buff.dwCursorPosition;
-
-				//SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), buff.dwCursorPosition);
-				break;
-			}
-			case 90:
-			{
-				colorAttributes color = 0x00;
-				const char* buffer = "\b \b \b \b";
-				buff.dwCursorPosition.X -= 2;
-
 				WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), buffer, 4, NULL, NULL);
 				Movements::coordCpy = buff.dwCursorPosition;
 

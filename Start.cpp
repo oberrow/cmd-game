@@ -45,14 +45,17 @@ namespace game
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
 		if (physMemUsedByMe >= 15000000)
-			_STD terminate(); //If the memory usage is going higher then 100mb this line will terminate the program 
+			_STD terminate(); //If the memory usage is going higher then 15mb this line will terminate the program 
 	}
 	void Start::dispatch()
 	{
-		if ((char)getchVal == 'b' || (char)getchVal == 'g' || (char)getchVal == 'r' || (char)getchVal == 'z' || (char)getchVal == 'l' || (char)getchVal == 'p' || (char)getchVal == 'B' || (char)getchVal == 'G' || (char)getchVal == 'R' || (char)getchVal == 'Z' || (char)getchVal == 'L' || (char)getchVal == 'P')
+		if ((char)getchVal == 'b' || (char)getchVal == 'g' || (char)getchVal == 'r' || (char)getchVal == '\b' || (char)getchVal == 'l' || (char)getchVal == 'p' || (char)getchVal == 'B' || (char)getchVal == 'G' || (char)getchVal == 'R' || (char)getchVal == 'Z' || (char)getchVal == 'L')
 			Place::Place(getchVal, in_Buffer);
 		else if ((char)getchVal == 'w' || (char)getchVal == 'a' || (char)getchVal == 's' || (char)getchVal == 'd' || (char)getchVal == (char)32 || (char)getchVal == 'W' || (char)getchVal == 'A' || (char)getchVal == 'S' || (char)getchVal == 'D')
 			Movements::Movements(getchVal, in_Buffer);
+		else if ((char)getchVal == (char)3)
+			ctrlc = true;
+		else {	}
 	}
 	void Start::setFontSize(int FontSize)
 	{

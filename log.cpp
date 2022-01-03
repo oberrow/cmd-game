@@ -1,4 +1,4 @@
-#include "log.h"
+#include "log.hpp"
 
 namespace game {
 	void Log::levelInfo(std::string message)
