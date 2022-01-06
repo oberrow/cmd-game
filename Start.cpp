@@ -8,9 +8,12 @@ namespace game
 		{
 			setFontSize(18);
 			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			/*	
+				game::Generate g{ savegame.c_str(), in_Buffer };
+			*/
 			generate();
 		}
-#if 1
+#if 0
 		Colisions c = in_Buffer;
 #endif
 			dispatch();
@@ -49,13 +52,15 @@ namespace game
 	}
 	void Start::dispatch()
 	{
-		if ((char)getchVal == 'b' || (char)getchVal == 'g' || (char)getchVal == 'r' || (char)getchVal == '\b' || (char)getchVal == 'l' || (char)getchVal == 'p' || (char)getchVal == 'B' || (char)getchVal == 'G' || (char)getchVal == 'R' || (char)getchVal == 'Z' || (char)getchVal == 'L')
-			Place::Place(getchVal, in_Buffer);
+		outputFstream.open(savegame, std::ios::out | std::ios::app );
+		if ((char)getchVal == 'b' || (char)getchVal == 'g' || (char)getchVal == 'r' || (char)getchVal == '\b' || (char)getchVal == 'l' || (char)getchVal == 'p' || (char)getchVal == 'B' || (char)getchVal == 'G' || (char)getchVal == 'R' || (char)getchVal == 'Z' || (char)getchVal == 'L' || (char)getchVal == 'P')
+			Place::Place(getchVal, in_Buffer, outputFstream, savegame.c_str());
 		else if ((char)getchVal == 'w' || (char)getchVal == 'a' || (char)getchVal == 's' || (char)getchVal == 'd' || (char)getchVal == (char)32 || (char)getchVal == 'W' || (char)getchVal == 'A' || (char)getchVal == 'S' || (char)getchVal == 'D')
 			Movements::Movements(getchVal, in_Buffer);
 		else if ((char)getchVal == (char)3)
+		{
 			ctrlc = true;
-		else {	}
+		}
 	}
 	void Start::setFontSize(int FontSize)
 	{

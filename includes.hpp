@@ -7,4 +7,9 @@
 #include <thread>
 #include <chrono>
 #include <psapi.h>
-#include <cctype>                                                                                                                                                                                                                                             
+#include <cctype>      
+#include <fstream>
+#include <vector>
+#include <limits>
+#include <filesystem>
+#include <ios>

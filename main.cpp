@@ -25,8 +25,17 @@ int main()
 		if (game::Start::ctrlc == true)
 			return 0;
 		else
-			game::Start s{ _getch() };
+			game::Start s{ _getch(), "savegame.dat" };
 	}
+#elif 0
+	auto start = std::chrono::high_resolution_clock::now();
+	if (game::Start::ctrlc == true)
+		return 0;
+	else
+		game::Start s{ _getch(), "savegame.txt" };
+	auto end = std::chrono::high_resolution_clock::now();
+	auto time = start - end;
+	std::cout << "A game tick lasts " << time;
 #endif
 	return 0;
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                     
