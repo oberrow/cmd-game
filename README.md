@@ -11,7 +11,7 @@
 
 ##  Known issues
 ### -------------------------------------------------------------------------------------------------------
-1. The colisions to work needs you to send input
+1. The colisions to work needs you to send input twice
 2. CTRL-C won't terminate the program anymore
 
 ## Notes
