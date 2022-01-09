@@ -18,8 +18,6 @@ namespace game {
 	{
 	public:
 		Generate(const char* savegame, CONSOLE_SCREEN_BUFFER_INFO buff) {
-			COORD newPos = { 1, 9 };
-			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 #if 0
 			{
 				for (int i = 0; i < 56; i++)
@@ -34,6 +32,8 @@ namespace game {
 					game::Place::Place(66, savegame, buff);
 			}
 #endif
+			COORD newPos = { 1, 9 };
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 			newPos = { 0, 1 };
 			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 			std::ifstream in_fs;
@@ -70,7 +70,9 @@ namespace game {
 			}
 			game::Log l = Log::levelInfoId;
 			newPos = { y, x };
-			size_t comma = values.rfind(',') + 1;
+			size_t preComma = values.rfind(',') + 1;
+			values.erase(preComma, preComma);
+			size_t comma = values.rfind(',');
 			std::string block = values.substr(comma);
 			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 			if (block == "GREENERY")

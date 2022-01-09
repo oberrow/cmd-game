@@ -1,3 +1,4 @@
+#pragma once
 #include "includes.hpp"
 #include "movements.hpp"
 #include "log.hpp"
@@ -5,11 +6,10 @@
 #include "Colisions.hpp"
 #include "Config.hpp"
 #include "Generate.hpp"
-#pragma once
+
 namespace game {
 	class Start {
 	public:
-		static inline bool ctrlc = false;
 		Log l{ Log::levelInfoId };
 		static inline std::string savegame = "";
 		Start(int in, std::string savegame)
@@ -21,14 +21,14 @@ namespace game {
 				ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
 				COORD temp = { 0, 0 };
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), temp);
-				l.levelInfo("Enter w, a, s and d to move\n");
-				temp = { 1, 0 };
+				l.levelInfo("Enter w, a, s and d to move. Press ctrl + c then any other key to exit \n");
+				temp = { 1, 1 };
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), temp);
 			}
 			else if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &in_Buffer))
 			{
 				l.levelError("An error has occured. Function GetConsoleScreenBufferInfo() has failed because of an unspecified error");
-				_STD terminate();
+				game::GlobalVars::endProg = true;
 			}
 		}
 		~Start() {
@@ -38,6 +38,7 @@ namespace game {
 	private:
 		std::thread thread1{ [=]() { start(); } };
 		std::thread thread2{ [=]() { MonitorMemoryUsage(); } };
+		void save();
 		void start();
 		void generate(/*int seed*/);
 		void dispatch();
@@ -45,7 +46,7 @@ namespace game {
 		inline static int times = 0;
 		static inline int times2 = 0;
 		int getchVal{};
-		inline static std::ofstream outputFstream;
+		inline static std::string sStream;
 		void setFontSize(int FontSize);
 		CONSOLE_SCREEN_BUFFER_INFO in_Buffer{};
 	};

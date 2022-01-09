@@ -2,6 +2,16 @@
 
 namespace game 
 {
+	void Start::save()
+	{
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(50ms);
+		std::ofstream fstream{ savegame, std::ios::app };
+		if (sStream != "")
+			fstream << sStream;
+		else
+			return;
+	}
 	void Start::start()
 	{
 		if (times2 == 0)
@@ -13,7 +23,7 @@ namespace game
 			*/
 			generate();
 		}
-#if 0
+#if 1
 		Colisions c = in_Buffer;
 #endif
 			dispatch();
@@ -48,18 +58,48 @@ namespace game
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
 		if (physMemUsedByMe >= 15000000)
-			_STD terminate(); //If the memory usage is going higher then 15mb this line will terminate the program 
+			::std::abort(); //If the memory usage is going higher then 15mb this line will terminate the program 
 	}
 	void Start::dispatch()
 	{
-		outputFstream.open(savegame, std::ios::out | std::ios::app );
-		if ((char)getchVal == 'b' || (char)getchVal == 'g' || (char)getchVal == 'r' || (char)getchVal == '\b' || (char)getchVal == 'l' || (char)getchVal == 'p' || (char)getchVal == 'B' || (char)getchVal == 'G' || (char)getchVal == 'R' || (char)getchVal == 'Z' || (char)getchVal == 'L' || (char)getchVal == 'P')
-			Place::Place(getchVal, in_Buffer, outputFstream, savegame.c_str());
+		if ((char)getchVal == 'b' || (char)getchVal == 'g' || (char)getchVal == 'r' || (char)getchVal == '\b' || (char)getchVal == 'l' || (char)getchVal == 'p' || (char)getchVal == 'B' || (char)getchVal == 'G' || (char)getchVal == 'R' || (char)getchVal == 'L' || (char)getchVal == 'P')
+		{
+			Place::Place(getchVal, in_Buffer, sStream, savegame.c_str());
+			if (getchVal == 'g' || getchVal == 'G')
+			{
+				sStream = { "{ " + std::to_string(in_Buffer.dwCursorPosition.X) + ", " + std::to_string(in_Buffer.dwCursorPosition.Y) + " GREENERY }, \n" };
+				save();
+			}
+			else if (getchVal == 'b' || getchVal == 'B')
+			{
+				sStream = { "{ " + std::to_string(in_Buffer.dwCursorPosition.X) + ", " + std::to_string(in_Buffer.dwCursorPosition.Y) + " BEDROCK }, \n" };
+				save();
+			}
+			else if (getchVal == 'r' || getchVal == 'R')
+			{
+				sStream = { "{ " + std::to_string(in_Buffer.dwCursorPosition.X) + ", " + std::to_string(in_Buffer.dwCursorPosition.Y) + " ROCK }, \n" };
+				save();
+			}
+			else if (getchVal == 'p' || getchVal == 'P')
+			{
+				sStream = { "{ " + std::to_string(in_Buffer.dwCursorPosition.X) + ", " + std::to_string(in_Buffer.dwCursorPosition.Y) + " WATER }, \n" };
+				save();
+			}
+			else if (getchVal == 'l' || getchVal == 'L')
+			{
+				sStream = { "{ " + std::to_string(in_Buffer.dwCursorPosition.X) + ", " + std::to_string(in_Buffer.dwCursorPosition.Y) + " LOG }, \n" };
+				save();
+			}
+			else if (getchVal == '\b')
+			{
+				game::GlobalVars::BackSpace = true;
+			}
+		}
 		else if ((char)getchVal == 'w' || (char)getchVal == 'a' || (char)getchVal == 's' || (char)getchVal == 'd' || (char)getchVal == (char)32 || (char)getchVal == 'W' || (char)getchVal == 'A' || (char)getchVal == 'S' || (char)getchVal == 'D')
 			Movements::Movements(getchVal, in_Buffer);
 		else if ((char)getchVal == (char)3)
 		{
-			ctrlc = true;
+			game::GlobalVars::endProg = true;
 		}
 	}
 	void Start::setFontSize(int FontSize)

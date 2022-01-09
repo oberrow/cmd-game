@@ -9,14 +9,10 @@ namespace game {
 	private:
 		Log l = Log::levelInfoId;
 	public:
-		Place(int blockId, CONSOLE_SCREEN_BUFFER_INFO buff, std::ostream& outFile, const char* savegame) {
+		Place(int blockId, CONSOLE_SCREEN_BUFFER_INFO buff, std::string& sStream, const char* savegame) {
 			unsigned char space = 32;
 			std::cout << space;
 			buff.dwCursorPosition.X += 3;
-			if (!std::filesystem::exists(std::string(savegame)))
-			{
-				std::ofstream f{ savegame, std::ios::trunc };
-			}
 			switch (blockId) {
 			case 71:
 			{
@@ -24,7 +20,8 @@ namespace game {
 					colorAttributes color = LIGHTGREEN;
 					std::cout << "[]";
 				}
-				outFile << "\n{ " + std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", GREENERY }, ";
+				//const char* savegame, int blockId, COORD currentCoord
+
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
@@ -34,7 +31,6 @@ namespace game {
 					colorAttributes color = LIGHTGREEN;
 					std::cout << "[]";
 				}
-				outFile << "\n{ " + std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", GREENERY }, ";
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
@@ -44,7 +40,7 @@ namespace game {
 					colorAttributes color = LIGHTGRAY;
 					std::cout << "[]";
 				}
-				outFile << "\n{ " + std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", ROCK }, ";
+
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
@@ -54,7 +50,7 @@ namespace game {
 					colorAttributes color = LIGHTGRAY;
 					std::cout << "[]";
 				}
-				outFile << "\n{ " + std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", ROCK }, ";
+
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
@@ -63,8 +59,8 @@ namespace game {
 				{
 					colorAttributes color = LIGHTBLUE;
 					std::cout << "[]";
-				}
-				outFile << "\n{ " + std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", BEDROCK }, ";
+				} 
+
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
@@ -74,7 +70,7 @@ namespace game {
 					colorAttributes color = LIGHTBLUE;
 					std::cout << "[]";
 				}
-				outFile << "\n{ " + std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", BEDROCK }, ";
+
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
@@ -84,7 +80,7 @@ namespace game {
 					colorAttributes color = BROWN;
 					std::cout << "[]";
 				}
-				outFile << "\n{ " + std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", LOG }, ";
+
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
@@ -94,7 +90,7 @@ namespace game {
 					colorAttributes color = BROWN;
 					std::cout << "[]";
 				}
-				outFile << "\n{ " + std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", LOG }, ";
+
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
@@ -104,7 +100,7 @@ namespace game {
 					colorAttributes color = BLUE;
 					std::cout << "[]";
 				}
-				outFile << "\n{ " + std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", WATER }, ";
+
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}
@@ -114,7 +110,7 @@ namespace game {
 					colorAttributes color = BLUE;
 					std::cout << "[]";
 				}
-				outFile << "\n{ " + std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", WATER }, ";
+
 				Movements::coordCpy = buff.dwCursorPosition;
 				break;
 			}

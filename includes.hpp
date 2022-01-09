@@ -13,3 +13,5 @@
 #include <limits>
 #include <filesystem>
 #include <ios>
+#include <sstream>
+#include "GlobalVars.hpp"

@@ -22,20 +22,32 @@ int main()
 		game::Movements m(_getch(), buff);
 #elif 1
 	while (true) {
-		if (game::Start::ctrlc == true)
+		if (game::GlobalVars::endProg == true)
 			return 0;
 		else
-			game::Start s{ _getch(), "savegame.dat" };
+			game::Start s{ _getch(), "savegame.txt" };
+		
 	}
 #elif 0
 	auto start = std::chrono::high_resolution_clock::now();
-	if (game::Start::ctrlc == true)
+	if (game::GlobalVars::endProg == true)
 		return 0;
 	else
 		game::Start s{ _getch(), "savegame.txt" };
 	auto end = std::chrono::high_resolution_clock::now();
 	auto time = start - end;
 	std::cout << "A game tick lasts " << time;
+#elif 0
+	auto s = std::chrono::high_resolution_clock::now();
+	int a = 0;
+	do
+	{
+		a++;
+		std::cout << '\n' << a;
+	} while (a <= 2499);
+	auto e = std::chrono::high_resolution_clock::now();
+	auto dur = e - s;
+	std::cout << "Took: " << dur;
 #endif
 	return 0;
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                     
