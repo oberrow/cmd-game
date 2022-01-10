@@ -1,7 +1,6 @@
 #pragma once
 #include "includes.hpp"
 #include "log.hpp"
-#include "movements.hpp"
 
 namespace game {
 	class Colisions
@@ -9,29 +8,66 @@ namespace game {
     private:
 		Log l{ Log::levelInfoId };
         TCHAR strFromConsole[1];
+        TCHAR strFromConsoleUp[1];
+        WORD lpAttrib[1];
+        WORD lpAttrib2[1];
 	public:
+        COORD newPos{};
         bool found = false;
+        bool isBlockAbove = false;
 		Colisions(CONSOLE_SCREEN_BUFFER_INFO buff)
 		{
             COORD pos = buff.dwCursorPosition;
-            DWORD dwChars;
+            DWORD dwChars1;
+            DWORD dwChars2;
+            DWORD dwAttribs1;
+            DWORD dwAttribs2;
             ReadConsoleOutputCharacter(
                 GetStdHandle(STD_OUTPUT_HANDLE),
                 strFromConsole,
                 1,
                 pos,
-                &dwChars);
+                &dwChars1);
+            ReadConsoleOutputAttribute(
+            GetStdHandle(STD_OUTPUT_HANDLE),
+            lpAttrib,
+            1,
+            pos,
+            &dwAttribs1
+            );
+            COORD pos2 = buff.dwCursorPosition;
+            pos2.Y--;
+            ReadConsoleOutputCharacter(
+                GetStdHandle(STD_OUTPUT_HANDLE),
+                strFromConsoleUp,
+                1,
+                pos2,
+                &dwChars2);
+            ReadConsoleOutputAttribute(
+                GetStdHandle(STD_OUTPUT_HANDLE),
+                lpAttrib2,
+                1,
+                pos2,
+                &dwAttribs2
+            );
             char c = strFromConsole[0];
-            COORD newPos = pos;
-            newPos.Y--;
-            if (c == '[' || c == ']' && dwChars != 0 && game::GlobalVars::BackSpace != true)
-            {
-                found = 1;
-                SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
-                Movements::coordCpy = newPos;
-            }
-            else
-            {}
+            char c2 = strFromConsoleUp[0];
+            unsigned int a = lpAttrib[0];
+            unsigned int a2 = lpAttrib2[0];
+            if (c2 == '[' || c2 == ']' && !game::GlobalVars::BackSpace && dwChars2 != 0 && lpAttrib[0] != BLUE && dwAttribs1 != 0)
+                {
+                    isBlockAbove = 1;
+                    newPos = pos;
+                    newPos.X--;
+                }
+                else if(c == '[' || c == ']' && !game::GlobalVars::BackSpace && dwChars1 != 0 && lpAttrib2[0] != BLUE && dwAttribs2 != 0)
+                {
+                    found = 1;
+                    newPos = pos;
+                    newPos.Y--;
+                }
+                else
+                {}
 	    }
 	};
 }

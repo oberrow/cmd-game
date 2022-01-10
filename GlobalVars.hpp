@@ -4,7 +4,7 @@ namespace game
 {
 	namespace GlobalVars
 	{
-		static bool endProg = false;
-		static bool BackSpace = false;
+		inline static bool endProg = false;
+		inline static bool BackSpace = false;
 	};
 }

@@ -109,6 +109,6 @@ namespace game {
 			}
 		}
 		friend class Place;
-		friend class Colisions;
+		friend class Start;
 	};
 }                                                                                                                                        

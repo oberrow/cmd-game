@@ -22,7 +22,8 @@ namespace game {
 				COORD temp = { 0, 0 };
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), temp);
 				l.levelInfo("Enter w, a, s and d to move. Press ctrl + c then any other key to exit \n");
-				temp = { 1, 1 };
+				temp.X = 1;
+				temp.Y = 9;
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), temp);
 			}
 			else if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &in_Buffer))

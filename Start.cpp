@@ -8,7 +8,7 @@ namespace game
 		std::this_thread::sleep_for(50ms);
 		std::ofstream fstream{ savegame, std::ios::app };
 		if (sStream != "")
-			fstream << sStream;
+			fstream << '\n' << sStream;
 		else
 			return;
 	}
@@ -18,16 +18,26 @@ namespace game
 		{
 			setFontSize(18);
 			std::this_thread::sleep_for(std::chrono::milliseconds(50));
-			/*	
+			/*
 				game::Generate g{ savegame.c_str(), in_Buffer };
 			*/
 			generate();
 		}
-#if 1
+		dispatch();
 		Colisions c = in_Buffer;
-#endif
-			dispatch();
+#define MOVE_TO \
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c.newPos); \
+		Movements::coordCpy = c.newPos
+		if (c.isBlockAbove && !c.found)
+		{
+			MOVE_TO;
+		}
+		else if (c.found && !c.isBlockAbove)
+		{
+			MOVE_TO;
+		}
 	}
+
 	void Start::generate(/*int seed*/)
 	{
 		times2++;
@@ -48,11 +58,16 @@ namespace game
 			for (int i = 0; i < 56 * 3; i++)
 				std::cout << "[] ";
 		}
-		newPos = { 0, 1 };
+		newPos.X = 1;
+		newPos.Y = 9;
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 	}
 	void Start::MonitorMemoryUsage()
 	{
+		// Credits:
+		// https://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
+		// PS. there is some functions / classes that aren't coded by me (or not entirely coded by me)
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(3));
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
