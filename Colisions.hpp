@@ -17,18 +17,19 @@ namespace game {
         bool isBlockAbove = false;
 		Colisions(CONSOLE_SCREEN_BUFFER_INFO buff)
 		{
+#define RCOA ReadConsoleOutputAttribute
+#define RCOC ReadConsoleOutputCharacterW
             COORD pos = buff.dwCursorPosition;
             DWORD dwChars1;
             DWORD dwChars2;
             DWORD dwAttribs1;
-            DWORD dwAttribs2;
-            ReadConsoleOutputCharacter(
+            RCOC(
                 GetStdHandle(STD_OUTPUT_HANDLE),
                 strFromConsole,
                 1,
                 pos,
                 &dwChars1);
-            ReadConsoleOutputAttribute(
+            RCOA(
             GetStdHandle(STD_OUTPUT_HANDLE),
             lpAttrib,
             1,
@@ -37,37 +38,28 @@ namespace game {
             );
             COORD pos2 = buff.dwCursorPosition;
             pos2.Y--;
-            ReadConsoleOutputCharacter(
+            RCOC(
                 GetStdHandle(STD_OUTPUT_HANDLE),
                 strFromConsoleUp,
                 1,
                 pos2,
                 &dwChars2);
-            ReadConsoleOutputAttribute(
-                GetStdHandle(STD_OUTPUT_HANDLE),
-                lpAttrib2,
-                1,
-                pos2,
-                &dwAttribs2
-            );
             char c = strFromConsole[0];
             char c2 = strFromConsoleUp[0];
-            unsigned int a = lpAttrib[0];
-            unsigned int a2 = lpAttrib2[0];
-            if (c2 == '[' || c2 == ']' && !game::GlobalVars::BackSpace && dwChars2 != 0 && lpAttrib[0] != BLUE && dwAttribs1 != 0)
-                {
+            WORD a = lpAttrib[0];
+            if (c2 == '[' || c2 == ']' && !game::GlobalVars::BackSpace && dwChars2 != 0/* && a != BLUE && dwAttribs1 != 0*/)
+            {
                     isBlockAbove = 1;
                     newPos = pos;
                     newPos.X--;
-                }
-                else if(c == '[' || c == ']' && !game::GlobalVars::BackSpace && dwChars1 != 0 && lpAttrib2[0] != BLUE && dwAttribs2 != 0)
-                {
+            }
+            else if(c == '[' || c == ']' && !game::GlobalVars::BackSpace && dwChars1 != 0 && a != BLUE && dwAttribs1 != 0)
+            {
                     found = 1;
                     newPos = pos;
                     newPos.Y--;
-                }
-                else
-                {}
+            }
+            else {}
 	    }
 	};
 }
