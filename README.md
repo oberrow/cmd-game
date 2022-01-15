@@ -19,6 +19,7 @@
 ### -------------------------------------------------------------------------------------------------------
 1. if the memory usage goes above 15 mb the program will terminate (intentional feature) if this happens try to debug the program and make a bug report
 2. The water block doesn't have colisions
+3. I am trying to have 2 consoles when for playing in and one for logging messages if you know how to do this go to https://stackoverflow.com/questions/70714060/making-a-console-window-in-a-console-application to try and help or make a pull-request if you kno how
 ## Screenshots
 How it looks like when everything is generated:
 ![Screenshot 2022-01-03 121957](https://user-images.githubusercontent.com/72581470/147960151-f2eb3844-31bc-4e82-8c08-1937ffee471c.png)
