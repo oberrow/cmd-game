@@ -15,3 +15,5 @@
 #include <ios>
 #include <sstream>
 #include "GlobalVars.hpp"
+#include "shellapi.h"
+#include <format>

@@ -17,11 +17,7 @@ namespace game
 		if (times2 == 0)
 		{
 			setFontSize(18);
-			std::this_thread::sleep_for(std::chrono::milliseconds(50));
-			/*
-				game::Generate g{ savegame.c_str(), in_Buffer };
-			*/
-			generate();
+			//generate();
 		}
 		dispatch();
 		Colisions c = in_Buffer;
@@ -69,7 +65,7 @@ namespace game
 		// PS. there is some functions / classes that aren't coded by me (or not entirely coded by me)
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(3));
-		PROCESS_MEMORY_COUNTERS_EX pmc;
+		PROCESS_MEMORY_COUNTERS_EX pmc{};
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
 		if (physMemUsedByMe >= 15000000)
@@ -114,7 +110,7 @@ namespace game
 			Movements::Movements(getchVal, in_Buffer);
 		else if ((char)getchVal == (char)3)
 		{
-			game::GlobalVars::endProg = true;
+			ctrlc = true;
 		}
 	}
 	void Start::setFontSize(int FontSize)
