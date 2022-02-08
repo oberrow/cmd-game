@@ -20,7 +20,12 @@
 ### -------------------------------------------------------------------------------------------------------
 1. if the memory usage goes above 15 mb the program will terminate (intentional feature) if this happens try to debug the program and make a bug report
 2. The water block doesn't have colisions
-3. I am trying to have 2 consoles when for playing in and one for logging messages if you know how to do this go to https://stackoverflow.com/questions/70714060/making-a-console-window-in-a-console-application to try and help or make a pull-request if you kno how
+3. [Don't click this link](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwig0KSp5-71AhU2lIkEHeZaBf8QyCl6BAgHEAM&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DdQw4w9WgXcQ&usg=AOvVaw0aHtehaphMhOCAkCydRLZU)
+## TODO
+1. Add multiplayer
+2. Add players as entities
+3. Fix generation
+4. Add entities to generation
 ## Screenshots
 How it looks like when everything is generated:
 ![Screenshot 2022-01-03 121957](https://user-images.githubusercontent.com/72581470/147960151-f2eb3844-31bc-4e82-8c08-1937ffee471c.png)
