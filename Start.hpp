@@ -20,8 +20,16 @@ namespace game {
 			if (times == 0)
 			{
 				this->savegame = par_savegame;
+				if (!std::filesystem::exists(savegame))
+				{
+					l.levelError(std::format("{}", savegame, " does not exist"));
+					l.levelInfo("Making file " + savegame + "\n");
+					std::ofstream makeSavgame{ savegame, std::ios::trunc };
+					makeSavgame.close();
+				}
+				/*
 				std::string stringpathexe = std::filesystem::current_path().string() + "\\log.exe";
-				/*ShellExecuteA(0, "open", stringpathexe.c_str(), 0, 0, 10);
+				ShellExecuteA(0, "open", stringpathexe.c_str(), 0, 0, 10);
 				if (GetLastError() <= 32)
 				{
 					int gle = GetLastError();

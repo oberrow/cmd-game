@@ -11,10 +11,11 @@ int main(int argc, TCHAR** argv)
 	system("start log.exe");
 	WHILETRUE
 	{
-		if (game::Start::ctrlc == true)
+		int getchVal = _getch();
+		if (getchVal == 3)
 			return 0;
 		else
-			game::Start s{ _getch(), "savegame.txt" };
+			game::Start s{ getchVal, "savegame.txt" };
 	}
 #elif !STATE
 	std::ostream& cout = std::cout;
