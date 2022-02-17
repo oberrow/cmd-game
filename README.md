@@ -12,9 +12,9 @@
 ##  Known issues
 ### -------------------------------------------------------------------------------------------------------
 1. The colisions to work needs you to send input twice
-2. CTRL-C won't terminate the program anymore
+2. CTRL-C won't terminate the program anymore - FIXED
 3. The colisions on one side of a water block (see [Step 2](https://github.com/oberrow/cmd-game#how-to-play)) work (they are not supposed to)
-4. when you move it will take you to some text (only in pre release 4)
+4. when you move it will take you to some text (only in pre release 4) - FIXED
 
 ## Notes
 ### -------------------------------------------------------------------------------------------------------
@@ -24,7 +24,7 @@
 ## TODO
 1. Add multiplayer
 2. Add players as entities
-3. Fix generation
+3. Fix generation - ALMOST DONE
 4. Add entities to generation
 ## Screenshots
 How it looks like when everything is generated:
