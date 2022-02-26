@@ -107,31 +107,31 @@ namespace game {
 					
 				}
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
-				if (block == ",REENERY " || block == ",EENERY " || block == ",ENERY ")
+				if (block == ",REENERY " || block == ",EENERY " || block == ",ENERY " || block == ",GREENERY ")
 				{
 					colorAttributes grass = LIGHTGREEN;
 					std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					std::cout << "[] ";
 				}
-				else if (block == ",OCK " || block == ",ROCK " || block == ",CK ")
+				else if (block == ",OCK " || block == ",ROCK " || block == ",CK " || block == ",ROCK")
 				{
 					colorAttributes color = LIGHTGRAY;
 					std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					std::cout << "[] ";
 				}
-				else if (block == ",EDROCK " || block == ",DROCK ")
+				else if (block == ",EDROCK " || block == ",DROCK " || block == ",BEDROCK")
 				{
 					colorAttributes color = LIGHTBLUE;
 					std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					std::cout << "[] ";
 				}
-				else if (block == ",OG " || block == ",G ")
+				else if (block == ",OG " || block == ",G " || block == ",LOG")
 				{
 					colorAttributes color = BROWN;
 					std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					std::cout << "[] ";
 				}
-				else if (block == ",ATER " || block == ",TER ")
+				else if (block == ",ATER " || block == ",TER " || block == ",WATER")
 				{
 					colorAttributes color = BLUE;
 					std::this_thread::sleep_for(std::chrono::milliseconds(50));
