@@ -47,13 +47,13 @@ namespace game {
             char c = strFromConsole[0];
             char c2 = strFromConsoleUp[0];
             WORD a = lpAttrib[0];
-            if (c2 == '[' || c2 == ']' && !game::GlobalVars::BackSpace && dwChars2 != 0/* && a != BLUE && dwAttribs1 != 0*/)
+            if (c2 == '[' || c2 == ']' && dwChars2 != 0)
             {
                     isBlockAbove = 1;
                     newPos = pos;
                     newPos.X--;
             }
-            else if(c == '[' || c == ']' && !game::GlobalVars::BackSpace && dwChars1 != 0 && a != BLUE && dwAttribs1 != 0)
+            else if(c == '[' || c == ']' && dwChars1 != 0 && a != BLUE && dwAttribs1 != 0)
             {
                     found = 1;
                     newPos = pos;

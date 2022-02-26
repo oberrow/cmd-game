@@ -11,42 +11,36 @@
 namespace game {
 	class Start {
 	public:
+		bool use_old_gen = false;
 		Log l{ Log::levelInfoId };
 		inline static bool ctrlc = false;
 		static inline std::string savegame = "";
-		Start(int in, std::string par_savegame)
+		Start(int in, std::string par_savegame, bool par_useOldGen)
 			:getchVal(in)
 		{
 			if (times == 0)
 			{
+				use_old_gen = par_useOldGen;
+				system("cls");
 				this->savegame = par_savegame;
-				if (!std::filesystem::exists(savegame))
-				{
-					l.levelError(std::format("{}", savegame, " does not exist"));
-					l.levelInfo("Making file " + savegame + "\n");
-					std::ofstream makeSavgame{ savegame, std::ios::trunc };
-					makeSavgame.close();
-				}
-				/*
-				std::string stringpathexe = std::filesystem::current_path().string() + "\\log.exe";
-				ShellExecuteA(0, "open", stringpathexe.c_str(), 0, 0, 10);
-				if (GetLastError() <= 32)
-				{
-					int gle = GetLastError();
-					std::string str = std::format("Function \"ShellExecuteA\" has failed with error code {}", gle, "!");
-					GameInterrupt((LPCSTR)str.c_str());
-				}*/
-
+				//ShellExecuteA(NULL, "open", "log.exe", NULL, NULL, SW_SHOWMINIMIZED);
 				times++;
 				ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
 				COORD temp = { 0, 0 };
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), temp);
-				l.levelInfo("Enter w, a, s and d to move. Press ctrl + c then any other key to exit \n", 0);
+				l.levelInfo("Enter w, a, s and d to move. Press ctrl + c to exit\n", PRINT_ON_DEFAULT_CONSOLE);
 				temp.X = 1;
 				temp.Y = 9;
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), temp);
 				std::this_thread::sleep_for(std::chrono::milliseconds(50));
+				/*if (use_old_gen)
+				{*/
+					generate();
+				//}
+				//else
+				//{
 				game::Generate g{ savegame.c_str(), in_Buffer };
+				//}
 			}
 			else if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &in_Buffer))
 			{
@@ -59,6 +53,7 @@ namespace game {
 			thread2.detach();
 		}
 	private:
+		bool isPlacingBlock = false;
 		std::thread thread1{ [=]() { start(); } }; //lambada 1
 		std::thread thread2{ [=]() { MonitorMemoryUsage(); } }; //lambada 2
 		void save();

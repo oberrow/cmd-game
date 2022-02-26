@@ -118,8 +118,8 @@ namespace game {
 			{
 				colorAttributes color = BLACK;
 				const char* buffer = "\b \b \b \b";
-				buff.dwCursorPosition.X -= 2;
 				WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), buffer, 4, NULL, NULL);
+				buff.dwCursorPosition.X -= 4;
 				Movements::coordCpy = buff.dwCursorPosition;
 
 				break;

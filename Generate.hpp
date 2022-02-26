@@ -64,6 +64,7 @@ namespace game {
 				{
 					// Get Coords
 					// ----------------------------------------
+					
 					if (values->find("{ ") != npos)
 					{
 						x = std::atoi(values->substr(2, 2).c_str());
@@ -101,43 +102,45 @@ namespace game {
 				size_t comma = values->rfind(',');
 				std::string block;
 				if(!values->empty())
-					block = values->substr(comma, std::string::npos);
+					block = values->substr(comma, npos);
 				else {
-
+					
 				}
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
-				if (block == ",REENERY ")
+				if (block == ",REENERY " || block == ",EENERY " || block == ",ENERY ")
 				{
 					colorAttributes grass = LIGHTGREEN;
+					std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					std::cout << "[] ";
 				}
-				else if (block == ",OCK ")
+				else if (block == ",OCK " || block == ",ROCK " || block == ",CK ")
 				{
 					colorAttributes color = LIGHTGRAY;
+					std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					std::cout << "[] ";
 				}
-				else if (block == ",EDROCK ")
+				else if (block == ",EDROCK " || block == ",DROCK ")
 				{
 					colorAttributes color = LIGHTBLUE;
+					std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					std::cout << "[] ";
 				}
-				else if (block == ",OG ")
+				else if (block == ",OG " || block == ",G ")
 				{
 					colorAttributes color = BROWN;
+					std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					std::cout << "[] ";
 				}
-				else if (block == ",ATER ")
+				else if (block == ",ATER " || block == ",TER ")
 				{
 					colorAttributes color = BLUE;
+					std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					std::cout << "[] ";
-				}
-				else if (block == ",ULL")
-				{
-					l.levelInfo("NULL block detected! Debug only!");
 				}
 				else
 				{
-					l.levelError("Generation failed of " + block + " at coordinates X: " + std::to_string(newPos.X) + " Y: " + std::to_string(newPos.Y) + "!");
+					if(!block.empty())
+						l.levelError("Error GEN01! Unrecognized block! Block id is " + block + " Current coordinates are X: " + std::to_string(newPos.X) + " Y: " + std::to_string(newPos.Y) + "!");
 				}
 			}
 			in_fs.close();

@@ -48,8 +48,6 @@ namespace game {
 						in_fs.ignore(1000, '\n');
 				}
 				std::getline(in_fs, values);
-				line++;
-
 				in_fs.close();
 				std::string pre_Values{};
 				/*std::string alphabet[53] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
@@ -73,27 +71,6 @@ namespace game {
 					s.int_Out = std::atoi(pre_Values.c_str());
 				else
 					l.levelWarn("Config file parser warning! Could not find any strings booleans or numbers after the \"=\" sign");
-				/*std::stringstream ss;
-				ss << pre_Values;
-				int value_int{};
-				std::string value_String{};
-				bool value_Bool{};
-				ss >> value_int >> value_Bool >> value_String;
-				s.boolean_Out = value_Bool;
-				s.int_Out = value_int;
-				s.str_Out = value_String;
-				int val = 0;
-				for (int i = 0; i < 53; i++)
-				{
-					if (pre_Values != alphabet[i]) {
-						val = std::stoi(pre_Values);
-						s.int_Out = val;
-					}
-				}
-				if (pre_Values == "true" || pre_Values == "false")
-					s.boolean_Out = (bool)val;
-				else
-					s.str_Out = pre_Values;*/
 		}
 	};
 }
