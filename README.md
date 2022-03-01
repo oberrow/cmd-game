@@ -19,12 +19,12 @@
 ## Notes
 ### -------------------------------------------------------------------------------------------------------
 1. if the memory usage goes above 15 mb the program will terminate (intentional feature) if this happens try to debug the program and make a bug report
-2. The water block doesn't have colisions
+2. The water block shoudn't have colisions
 3. [Don't click this link](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwig0KSp5-71AhU2lIkEHeZaBf8QyCl6BAgHEAM&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DdQw4w9WgXcQ&usg=AOvVaw0aHtehaphMhOCAkCydRLZU)
 ## TODO
 1. Add multiplayer
 2. Add players as entities
-3. Fix generation - ALMOST DONE
+3. Fix generation - FIXED
 4. Add entities to generation
 ## Screenshots
 How it looks like when everything is generated:
