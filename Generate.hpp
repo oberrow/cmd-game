@@ -40,7 +40,7 @@ namespace game {
 		Generate(const char* savegame, CONSOLE_SCREEN_BUFFER_INFO buff)
 			:savegame(savegame)
 		{
-			game::Log l = Log::levelInfoId;
+			::game::Log l = Log::levelInfoId;
 			COORD newPos = { 1, 9 };
 			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 			newPos = { 0, 1 };
@@ -50,98 +50,130 @@ namespace game {
 			std::ifstream in_fs;
 			in_fs.open(savegame);
 			std::string* rawContents{ new std::string };
+			if (!std::filesystem::exists(savegame))
+				l.levelError(std::string(savegame) + " doesn't exist! Please make the file first");
 			if (!in_fs.is_open())
 				l.levelError("Could not open file " + std::string(savegame));
 			else
 				l.levelInfo("Succesfully opened " + std::string(savegame));
-			while(getline(in_fs, *rawContents))
+			while (getline(in_fs, *rawContents))
 			{
 				size_t openingval = rawContents->find('{');
 				std::string* values = new std::string{ *rawContents };
 				size_t closingval = values->find('}');
 				if (openingval != std::string::npos && closingval != std::string::npos)
-					*values = values->substr(openingval, closingval);
+					*values = values->substr(openingval, closingval - 1);
 				{
-					// Get Coords
-					// ----------------------------------------
-					
-					if (values->find("{ ") != npos)
-					{
-						x = std::atoi(values->substr(2, 2).c_str());
-						if (std::isdigit(std::atoi(values->substr(3, 3).c_str())))
+						// Get Coords
+						// ----------------------------------------
+						int lastElementInX;
+						if (values->find("{ ") != npos)
 						{
-							std::string s1 = std::to_string(x);
-							std::string s2 = std::to_string(std::atoi(values->substr(3, 3).c_str()));
-							std::string finalResult = s1 + s2;
-							x = std::atoi(finalResult.c_str());
-							if (std::isdigit(std::atoi(values->substr(4, 4).c_str())))
+							x = std::atoi(values->substr(2, 1).c_str());
+							lastElementInX = 2;
+							if (util::isdigit(values->substr(3, 1).c_str()[0]))
 							{
+								lastElementInX++;
 								std::string s1 = std::to_string(x);
-								std::string s2 = std::to_string(std::atoi(values->substr(4, 4).c_str()));
-								std::string finalResult = s1 + s2;
-								x = std::atoi(finalResult.c_str());
+								std::string s2 = std::to_string(std::atoi(values->substr(3, 1).c_str()));
+								std::string finalResult1 = s1 + s2;
+								x = std::atoi(finalResult1.c_str());
+								if (util::isdigit(values->substr(4, 1).c_str()[0]))
+								{
+									lastElementInX++;
+									std::string s1 = std::to_string(x);
+									std::string s2 = std::to_string(std::atoi(values->substr(4, 1).c_str()));
+									std::string finalResult2 = s1 + s2;
+									x = std::atoi(finalResult2.c_str());
+								}
 							}
 						}
-					}
-					if (values->find("{ " + std::to_string(x) + ", ") != npos)
-					{
-						y = std::atoi(values->substr(5, 5).c_str());
-						if (std::isdigit(std::atoi(values->substr(6, 6).c_str())))
+						if (values->find("{ " + std::to_string(x) + ", ") != npos)
 						{
-							std::string s1 = std::to_string(y);
-							std::string s2 = std::to_string(std::atoi(values->substr(6, 6).c_str()));
-							std::string finalResult = s1 + s2;
-							y = std::atoi(finalResult.c_str());
+							if (lastElementInX == 4 || ~lastElementInX > 4)
+							{
+								y = std::atoi(values->substr(7, 1).c_str());
+								if (util::isdigit(values->substr(8, 1).c_str()[0]))
+								{
+									std::string s1 = std::to_string(y);
+									std::string s2 = std::to_string(std::atoi(values->substr(8, 1).c_str()));
+									std::string finalResult1 = s1 + s2;
+									y = std::atoi(finalResult1.c_str());
+								}
+							}
+							else if(lastElementInX == 3 || ~lastElementInX > 3)
+							{
+								y = std::atoi(values->substr(6, 1).c_str());
+								if (util::isdigit(values->substr(7, 1).c_str()[0]))
+								{
+									std::string s1 = std::to_string(y);
+									std::string s2 = std::to_string(std::atoi(values->substr(7, 1).c_str()));
+									std::string finalResult1 = s1 + s2;
+									y = std::atoi(finalResult1.c_str());
+								}
+							}
+							else if(lastElementInX == 2 || ~lastElementInX > 2)
+							{
+								y = std::atoi(values->substr(5, 1).c_str());
+								if (util::isdigit(values->substr(6, 1).c_str()[0]))
+								{
+									std::string s1 = std::to_string(y);
+									std::string s2 = std::to_string(std::atoi(values->substr(8, 1).c_str()));
+									std::string finalResult1 = s1 + s2;
+									y = std::atoi(finalResult1.c_str());
+								}
+							}
+							/*size_t _off = values->find(std::string("{ ").append(std::to_string(x)).append(", "));
+							y = std::atoi(values->substr(_off - 1, 1).c_str());
+							if (::game::util::isdigit(values->substr(_off, 1).c_str()[0]))
+							{
+								lastElementInX++;
+								std::string s1 = std::to_string(x);
+								std::string s2 = std::to_string(std::atoi(values->substr(_off + 1, 1).c_str()));
+								std::string finalResult1 = s1 + s2;
+								y = std::atoi(finalResult1.c_str());
+							}*/
 						}
+						// ----------------------------------------
+						int debug = 0;
+				}
+					newPos = { x, y };
+					SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
+					if (values->contains("GREENERY"))
+					{
+						colorAttributes grass = LIGHTGREEN;
+						std::this_thread::sleep_for(std::chrono::milliseconds(50));
+						std::cout << "[] ";
 					}
-					// ----------------------------------------
-				}
-				newPos = { x, y };
-				size_t preComma = values->rfind(',') + 1;
-				values->erase(preComma, preComma);
-				size_t comma = values->rfind(',');
-				std::string block;
-				if(!values->empty())
-					block = values->substr(comma, npos);
-				else {
-					
-				}
-				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
-				if (block == ",REENERY " || block == ",EENERY " || block == ",ENERY " || block == ",GREENERY ")
-				{
-					colorAttributes grass = LIGHTGREEN;
-					std::this_thread::sleep_for(std::chrono::milliseconds(50));
-					std::cout << "[] ";
-				}
-				else if (block == ",OCK " || block == ",ROCK " || block == ",CK " || block == ",ROCK")
-				{
-					colorAttributes color = LIGHTGRAY;
-					std::this_thread::sleep_for(std::chrono::milliseconds(50));
-					std::cout << "[] ";
-				}
-				else if (block == ",EDROCK " || block == ",DROCK " || block == ",BEDROCK")
-				{
-					colorAttributes color = LIGHTBLUE;
-					std::this_thread::sleep_for(std::chrono::milliseconds(50));
-					std::cout << "[] ";
-				}
-				else if (block == ",OG " || block == ",G " || block == ",LOG")
-				{
-					colorAttributes color = BROWN;
-					std::this_thread::sleep_for(std::chrono::milliseconds(50));
-					std::cout << "[] ";
-				}
-				else if (block == ",ATER " || block == ",TER " || block == ",WATER")
-				{
-					colorAttributes color = BLUE;
-					std::this_thread::sleep_for(std::chrono::milliseconds(50));
-					std::cout << "[] ";
-				}
-				else
-				{
-					if(!block.empty())
-						l.levelError("Error GEN01! Unrecognized block! Block id is " + block + " Current coordinates are X: " + std::to_string(newPos.X) + " Y: " + std::to_string(newPos.Y) + "!");
-				}
+					else if (values->contains("ROCK"))
+					{
+						colorAttributes color = LIGHTGRAY;
+						std::this_thread::sleep_for(std::chrono::milliseconds(50));
+						std::cout << "[] ";
+					}
+					else if (values->contains("BEDROCK"))
+					{
+						colorAttributes color = LIGHTBLUE;
+						std::this_thread::sleep_for(std::chrono::milliseconds(50));
+						std::cout << "[] ";
+					}
+				    else if (values->contains("LOG"))
+					{
+						colorAttributes color = BROWN;
+						std::this_thread::sleep_for(std::chrono::milliseconds(50));
+						std::cout << "[] ";
+					}
+					else if (values->contains("WATER"))
+					{
+						colorAttributes color = BLUE;
+						std::this_thread::sleep_for(std::chrono::milliseconds(50));
+						std::cout << "[] ";
+					}
+					else
+					{
+						if(!values->empty())
+							l.levelError("Error GEN01! Unrecognized block! Current coordinates are X: " + std::to_string(newPos.X) + " Y: " + std::to_string(newPos.Y) + "!");
+					}
 			}
 			in_fs.close();
 		}

@@ -60,7 +60,8 @@ namespace game {
 				else return;
 			}
 		};
-		// Type for Players soon this type will be able to add multiplayer to this game
+		// This type will be able to add multiplayer to this game
+		// Type for Players
 		class Player : public Entity 
 		{
 		private:

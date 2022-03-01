@@ -19,6 +19,7 @@ namespace game {
 	class Config
 	{
 	private:
+		size_t element = 0;
 		bool isNumber(std::string& line)
 		{
 			return (std::atoi(line.c_str()));
@@ -26,8 +27,9 @@ namespace game {
 		inline static int line = 0;
 		inline static std::string filename = "";
 	public:
-		Config(Store& s, std::string fn) {
-			Log l{ Log::levelErrorId };
+		std::vector<game::Store> Data;
+		Config(std::string fn) {
+			Log l{ Log::levelInfoId };
 			filename = fn;
 			if (!std::filesystem::exists(fn))
 			{
@@ -38,20 +40,14 @@ namespace game {
 			in_fs.open(filename);
 			in_fs.clear();
 			in_fs.seekg(0, std::ios::beg);
-				std::string values;
-				if (line == 0)
-				{
-					in_fs.ignore(1000, '\n');
-				}
-				else {
-					for (int i = 1; i < line; i++)
-						in_fs.ignore(1000, '\n');
-				}
-				std::getline(in_fs, values);
-				in_fs.close();
+			if (filename != fn)
+				line = 0;
+			std::string values;
+			while (std::getline(in_fs, values))
+			{	
 				std::string pre_Values{};
-				/*std::string alphabet[53] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
-		"w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };*/
+			/*std::string alphabet[53] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
+	"w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };*/
 				size_t nval = values.find("=");
 				if (nval != std::string::npos)
 					pre_Values = values.substr(nval + 1);
@@ -60,17 +56,48 @@ namespace game {
 					;
 				else
 					l.levelError("\nAn error has occured in the config file parser! Missing an \"=\" sign. Filename is " + fn);
-
+				game::Store toVec = { };
+				Data.push_back(toVec);
+				element++;
+				if (Data.size() == 1)
+				{
+					element--;
+				}
+				if (element >= Data.size())
+					GameInterrupt("Current Element of vector \"Data\" is greater then the size!");
 				if (!isNumber(pre_Values) && pre_Values == " true")
-					s.boolean_Out = true;
+				{
+					if (Data.size() == 1)
+						Data[element].boolean_Out = true;
+					else
+						Data[element - 1].boolean_Out = true;
+				}
 				else if (!isNumber(pre_Values) && pre_Values == " false")
-					s.boolean_Out = false;
+				{
+					if (Data.size() == 1)
+						Data[element].boolean_Out = false;
+					else
+						Data[element - 1].boolean_Out = false;
+				}
 				else if (!isNumber(pre_Values))
-					s.str_Out = pre_Values;
+				{
+					if (Data.size() == 1)
+						Data[element].str_Out = pre_Values;
+					else
+						Data[element - 1].str_Out = pre_Values;
+				}
 				else if (isNumber(pre_Values))
-					s.int_Out = std::atoi(pre_Values.c_str());
+				{
+					if (Data.size() == 1)
+						Data[element].int_Out = std::atoi(pre_Values.c_str());
+					else
+						Data[element - 1].int_Out = std::atoi(pre_Values.c_str());
+				}
 				else
 					l.levelWarn("Config file parser warning! Could not find any strings booleans or numbers after the \"=\" sign");
+
+		}
+		in_fs.close();
 		}
 	};
 }

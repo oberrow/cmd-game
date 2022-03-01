@@ -11,16 +11,14 @@
 namespace game {
 	class Start {
 	public:
-		bool use_old_gen = false;
 		Log l{ Log::levelInfoId };
 		inline static bool ctrlc = false;
 		static inline std::string savegame = "";
-		Start(int in, std::string par_savegame, bool par_useOldGen)
+		Start(int in, std::string par_savegame)
 			:getchVal(in)
 		{
 			if (times == 0)
 			{
-				use_old_gen = par_useOldGen;
 				system("cls");
 				this->savegame = par_savegame;
 				//ShellExecuteA(NULL, "open", "log.exe", NULL, NULL, SW_SHOWMINIMIZED);
@@ -33,14 +31,8 @@ namespace game {
 				temp.Y = 9;
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), temp);
 				std::this_thread::sleep_for(std::chrono::milliseconds(50));
-				/*if (use_old_gen)
-				{*/
-					generate();
-				//}
-				//else
-				//{
+				generate();
 				game::Generate g{ savegame.c_str(), in_Buffer };
-				//}
 			}
 			else if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &in_Buffer))
 			{
