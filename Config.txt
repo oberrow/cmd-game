@@ -1,0 +1,3 @@
+default_option = 2
+default_savegame = savegame.cmdgamesave
+use_colisions = true

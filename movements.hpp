@@ -104,7 +104,7 @@ namespace game {
 
 			}
 			default:
-				break;
+				;
 			}
 		}
 		friend class Place;

@@ -2,22 +2,96 @@
 
 namespace game 
 {
+	//VOID WINAPI Start::SetConsoleColors(WORD attribs)
+	//  {
+	//	HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	//	CONSOLE_SCREEN_BUFFER_INFOEX cbi;
+	//	cbi.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+	//	GetConsoleScreenBufferInfoEx(hOutput, &cbi);
+	//	cbi.wAttributes = attribs;
+	//	SetConsoleScreenBufferInfoEx(hOutput, &cbi);
+	////}
+
+	std::string Start::GetCurrentBlock()
+	{
+		DWORD dwAttribs1;
+		WORD lpAttrib = 0;
+		RCOA(
+			GetStdHandle(STD_OUTPUT_HANDLE),
+			&lpAttrib,
+			1,
+			in_Buffer.dwCursorPosition,
+			&dwAttribs1
+		);
+		
+		if (dwAttribs1 == 0)
+		{
+			return "NULL";
+		}
+		else
+		{
+			if (lpAttrib == LIGHTGREEN)
+			{
+				return "GRENNERY";
+			}
+			else if (lpAttrib == LIGHTBLUE)
+			{
+				return "BEDROCK";
+			}
+			else if (lpAttrib == BLUE)
+			{
+				return "WATER";
+			}
+			else if (lpAttrib == LIGHTGRAY)
+			{
+				return "ROCK";
+			}
+			else if (lpAttrib == BROWN)
+			{
+				return "LOG";
+			}
+			else
+			{
+				return "NULL";
+			}
+		}
+	}
 	void Start::save()
 	{
-		using namespace std::chrono_literals;
-		std::this_thread::sleep_for(50ms);
 		std::ofstream fstream{ savegame, std::ios::app };
-		if (sStream != "")
-			fstream << '\n' << sStream;
+		//if (getchVal == '\b' && GetCurrentBlock() != "NULL")
+		//{
+		//	std::string currentBlock = GetCurrentBlock();
+		//	std::string possibleFormat = "{ " + std::to_string(in_Buffer.dwCursorPosition.X) + ", " + std::to_string(in_Buffer.dwCursorPosition.Y) + currentBlock + " }, \n";
+		//	std::string* fileData = new std::string(read_file(savegame));
+		//	if (fileData->contains(possibleFormat))
+		//	{
+		//		// ------------------------------------------------------
+		//		// Credits : http://www.java2s.com/example/cpp/stl/removing-a-substring-from-a-string.html
+		//		size_t i = fileData->find(possibleFormat);
+		//
+		//		if (i != std::string::npos)
+		//			fileData->erase(i, possibleFormat.length());
+		//		// ------------------------------------------------------
+		//		std::ofstream out{ savegame, std::ios::trunc };
+		//		out << fileData;
+		//		out.close();
+		//	}
+		//	delete fileData;
+		//	return;
+		//}
+		if (!sStream.empty())
+			fstream << sStream;
 		else
 			return;
+		fstream.close();
 	}
 	void Start::start()
 	{
 		if (times2 == 0)
 		{
 			setFontSize(18);
-			//generate();
 		}
 		dispatch();
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -25,20 +99,35 @@ namespace game
 #define MOVE_TO \
 SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c.newPos); \
 game::Movements::coordCpy = c.newPos
-		if (c.isBlockAbove && !c.found && !isPlacingBlock && !game::GlobalVars::BackSpace)
+		if (use_colisions)
 		{
-			MOVE_TO;
+			if (c.isBlockAbove && !c.isBlockRight && !c.isBlockLeft && !c.found && !isPlacingBlock && !game::GlobalVars::BackSpace)
+			{
+				MOVE_TO;
+			}
+			else if (c.found && !c.isBlockRight && !c.isBlockLeft && !c.isBlockAbove && !isPlacingBlock && !game::GlobalVars::BackSpace)
+			{
+				MOVE_TO;
+			}
+			else if (!c.found && c.isBlockRight && !c.isBlockLeft && !c.isBlockAbove && !isPlacingBlock && !game::GlobalVars::BackSpace)
+			{
+				MOVE_TO;
+			}
+			else if (!c.found && !c.isBlockRight && c.isBlockLeft && !c.isBlockAbove && !isPlacingBlock && !game::GlobalVars::BackSpace)
+			{
+				MOVE_TO;
+			}
+			else if (GlobalVars::BackSpace || isPlacingBlock)
+			{
+				GlobalVars::BackSpace = false;
+				isPlacingBlock = false;
+			}
 		}
-		else if (c.found && !c.isBlockAbove && !isPlacingBlock && !game::GlobalVars::BackSpace)
-		{
-			MOVE_TO;
-		}
-		isPlacingBlock = true;
 	}
-
 	void Start::generate(/*int seed*/)
 	{
 		times2++;
+		LPCSTR toPrint = "[] ";
 		COORD newPos = { 1, 9 };
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 		{
@@ -56,8 +145,9 @@ game::Movements::coordCpy = c.newPos
 			for (int i = 0; i < 56 * 3; i++)
 				std::cout << "[] ";
 		}
-		newPos.X = 1;
-		newPos.Y = 9;
+		newPos.X = 0;
+		newPos.Y = 8;
+		game::Movements::coordCpy = newPos;
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 	}
 	void Start::MonitorMemoryUsage()
@@ -78,7 +168,7 @@ game::Movements::coordCpy = c.newPos
 		if ((char)getchVal == 'b' || (char)getchVal == 'g' || (char)getchVal == 'r' || (char)getchVal == '\b' || (char)getchVal == 'l' || (char)getchVal == 'p' || (char)getchVal == 'B' || (char)getchVal == 'G' || (char)getchVal == 'R' || (char)getchVal == 'L' || (char)getchVal == 'P')
 		{
 			isPlacingBlock = true;
-			Place::Place(getchVal, in_Buffer, sStream, savegame.c_str());
+			Place::Place(getchVal, in_Buffer);
 			/*if (!use_old_gen)
 			{*/
 				if (getchVal == 'g' || getchVal == 'G')
@@ -108,6 +198,8 @@ game::Movements::coordCpy = c.newPos
 				}
 				else if (getchVal == '\b')
 				{
+					sStream = { "{ " + std::to_string(in_Buffer.dwCursorPosition.X) + ", " + std::to_string(in_Buffer.dwCursorPosition.Y) + " DELETED_BLOCK }, \n" };
+					save();
 					game::GlobalVars::BackSpace = true;
 				}
 			//}

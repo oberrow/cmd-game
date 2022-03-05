@@ -9,7 +9,7 @@ namespace game {
 	private:
 		Log l = Log::levelInfoId;
 	public:
-		Place(int blockId, CONSOLE_SCREEN_BUFFER_INFO buff, std::string& sStream, const char* savegame) {
+		Place(int blockId, CONSOLE_SCREEN_BUFFER_INFO buff) {
 			unsigned char space = 32;
 			std::cout << space;
 			buff.dwCursorPosition.X += 3;
@@ -117,11 +117,9 @@ namespace game {
 			case 8:
 			{
 				colorAttributes color = BLACK;
-				const char* buffer = "\b \b \b \b";
-				WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), buffer, 4, NULL, NULL);
-				buff.dwCursorPosition.X -= 4;
+				printf_s("  ");
+				buff.dwCursorPosition.X += 2;
 				Movements::coordCpy = buff.dwCursorPosition;
-
 				break;
 			}
 			default:

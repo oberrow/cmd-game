@@ -3,12 +3,16 @@
 
 #define STATE 1
 
-std::tuple<std::string, int> menu(game::DeleteLog& dl) 
+#pragma warning(disable : 6387)
+
+std::tuple<std::string, int, bool> menu(game::DeleteLog& dl) 
 {
 	std::string savegame = "";
 	game::Store storeOptions1;
+	game::Store storeOptions2;
 	game::Config configuration = { game::Config{ "Config.txt" } };
 	storeOptions1 = configuration.Data[0];
+	storeOptions2 = configuration.Data[1];
 	std::string option = std::to_string(storeOptions1.int_Out);
 	std::cout << "******************************************************************************************************"
 		<< "\n Enter an option 1 to load a savegame or 2 to make a new one, \nPress 3 to delete a savegame and enter def for the default options in the Config.txt file\n Default option is: Option "
@@ -23,7 +27,7 @@ std::tuple<std::string, int> menu(game::DeleteLog& dl)
 	}
 	if (option == "def" && option.contains("1"))
 	{
-		return std::tuple(storeOptions1.str_Out, 0x01);
+		return std::tuple(storeOptions1.str_Out, 0x01, storeOptions2.boolean_Out);
 	}
 	else 
 	{
@@ -37,13 +41,13 @@ std::tuple<std::string, int> menu(game::DeleteLog& dl)
 		if (savegame == "end")
 		{
 			dl.~DeleteLog();
-			return std::tuple(std::string(), 0x00);
+			return std::tuple(std::string(), 0x00, false);
 		}
 		if (!std::filesystem::exists(savegame))
 		{
 			l.levelError("Hey! " + savegame + " doesn't exist >:(! Did you choose the wrong option?\n", PRINT_ON_DEFAULT_CONSOLE);
 			dl.~DeleteLog();
-			return std::tuple(std::string(), 0x00);;
+			return std::tuple(std::string(), 0x00, false);
 		}
 	}
 	else if (option.contains("2"))
@@ -53,19 +57,19 @@ std::tuple<std::string, int> menu(game::DeleteLog& dl)
 		if (savegame == "end")
 		{
 			dl.~DeleteLog();
-			return std::tuple(std::string(), 0x00);;
+			return std::tuple(std::string(), 0x00, false);
 		}
 		if (std::filesystem::exists(savegame))
 		{
 			l.levelError("Hey! " + savegame + " already exists >:( ! Did you choose the wrong option?\n", PRINT_ON_DEFAULT_CONSOLE);
 			dl.~DeleteLog();
-			return std::tuple(std::string(), 0x00);;
+			return std::tuple(std::string(), 0x00, false);
 		}
 		else
 		{
 			std::ofstream makeNew{ savegame };
 			makeNew.close();
-			return std::tuple(savegame, 0x01);
+			return std::tuple(savegame, 0x01, storeOptions2.boolean_Out);
 		}
 	}
 	else if (option.contains("3"))
@@ -75,13 +79,13 @@ std::tuple<std::string, int> menu(game::DeleteLog& dl)
 		if (savegame == "end")
 		{
 			dl.~DeleteLog();
-			return std::tuple(std::string(), 0x00);;
+			return std::tuple(std::string(), 0x00, false);
 		}
 		if (!std::filesystem::exists(savegame))
 		{
 			l.levelError("Hey! " + savegame + " doesn't exist >:(! Did you choose the wrong option?\n", PRINT_ON_DEFAULT_CONSOLE);
 			dl.~DeleteLog();
-			return std::tuple(std::string(), 0x00);;
+			return std::tuple(std::string(), 0x00, false);
 
 		}
 		else
@@ -93,10 +97,10 @@ std::tuple<std::string, int> menu(game::DeleteLog& dl)
 			{
 				l.levelInfo("Deleting " + savegame + "!\n", PRINT_ON_DEFAULT_CONSOLE);
 				remove(savegame.c_str());
-				return std::tuple(std::string(), 0x00);;
+				return std::tuple(std::string(), 0x00, false);
 			}
 			else {
-				return std::tuple(std::string(), 0x00);;
+				return std::tuple(std::string(), 0x00, false);
 			}
 		}
 	}
@@ -106,13 +110,13 @@ std::tuple<std::string, int> menu(game::DeleteLog& dl)
 		{
 			l.levelError("Hey! " + savegame + " already exists >:( ! Did you choose the wrong option?\n", PRINT_ON_DEFAULT_CONSOLE);
 			dl.~DeleteLog();
-			return std::tuple(std::string(), 0x00);;
+			return std::tuple(std::string(), 0x00, false);
 		}
 		else
 		{
 			std::ofstream makeNew{ savegame };
 			makeNew.close();
-			return std::tuple(savegame, 0x01);
+			return std::tuple(savegame, 0x01, storeOptions2.boolean_Out);
 		}
 	}
 	else if (storeOptions1.int_Out == 3 && option.contains("def"))
@@ -120,13 +124,13 @@ std::tuple<std::string, int> menu(game::DeleteLog& dl)
 		if (savegame == "end")
 		{
 			dl.~DeleteLog();
-			return std::tuple(std::string(), 0x00);;
+			return std::tuple(std::string(), 0x00, false);
 		}
 		if (!std::filesystem::exists(savegame))
 		{
 			l.levelError("Hey! " + savegame + " doesn't exist >:(! Did you choose the wrong option?\n", PRINT_ON_DEFAULT_CONSOLE);
 			dl.~DeleteLog();
-			return std::tuple(std::string(), 0x00);;
+			return std::tuple(std::string(), 0x00, false);
 
 		}
 		else
@@ -137,34 +141,41 @@ std::tuple<std::string, int> menu(game::DeleteLog& dl)
 			if (choice == "Y")
 			{
 				l.levelInfo("Deleting " + savegame + "\n", PRINT_ON_DEFAULT_CONSOLE);
-				remove(savegame.c_str());
+				remove(storeOptions1.str_Out.c_str());
 				if (!std::filesystem::exists(savegame))
 				{
 					l.levelInfo("Deleted " + savegame + " successfully!\n", PRINT_ON_DEFAULT_CONSOLE);
 				}
-				return std::tuple(std::string(), 0x00);
+				return std::tuple(std::string(), 0x00, false);
 			}
 			else if (choice == "N")
 			{
 				l.levelInfo("Cancelled!");
-				return std::tuple(std::string(), 0x00);
+				return std::tuple(std::string(), 0x00, false);
 			}
 			else {
-				return std::tuple(std::string(), 0x00);;
+				return std::tuple(std::string(), 0x00, false);
 			}
 		}
 	}
 
-	return std::tuple(savegame, 0x01);
+	return std::tuple(savegame, 0x01, storeOptions2.boolean_Out);
 }
 
 int main(int argc, TCHAR** argv)
 {
 	game::DeleteLog dl;
 	//MessageBox(NULL, TEXT("Test"), TEXT("Testing"), MB_ICONERROR);
+	// Credits : https://stackoverflow.com/a/14176581/16564788
+	HANDLE mutex = CreateMutexA(0, FALSE, "Local\\$myprogram$"); // try to create a named mutex
+	if (GetLastError() == ERROR_ALREADY_EXISTS) // did the mutex already exist?
+	{
+		ReleaseMutex(mutex);
+		return -1; // quit; mutex is released automatically
+	}
 #if STATE
 	system("start log.exe");
-	auto[savegame, end] = menu(dl);
+	auto [savegame, end, use_colisions] = menu(dl);
 	if (end == 0)
 	{
 		std::cout << "Press any key to continue...";
@@ -173,7 +184,7 @@ int main(int argc, TCHAR** argv)
 		return 0;
 	}
 	else {}
-	game::Start s{ 'S', savegame };
+	game::Start s1{ 'S', savegame, use_colisions };
 	WHILETRUE
 	{
 		int getchVal = _getch();
@@ -183,11 +194,10 @@ int main(int argc, TCHAR** argv)
 			return 0;
 		}
 		else
-			game::Start s{ getchVal, savegame };
+			game::Start s{ getchVal, savegame, use_colisions };
 	}
 #elif !STATE
-	bool found = game::isdigit('o');
-	std::cout << std::boolalpha << found;
+	int _gc = _getch();
 #endif
 	std::ofstream of{ "log.txt", std::ofstream::out | std::ofstream::trunc };
 	of << "[END]";

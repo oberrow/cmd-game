@@ -68,6 +68,11 @@ namespace game {
 			//size_t currentElement = element - 1;
 			std::string playername = "Test Player";
 		public:
+			std::string GetPlayerName()
+			{
+				return playername;
+			}
+			Player(const Player&) = delete;
 			Player(int id, COORD whereToSummon, bool killOnDestruction, std::string playername):Entity(id, whereToSummon, killOnDestruction)
 			{
 				this->playername = playername;
@@ -78,10 +83,6 @@ namespace game {
 			void summon()
 			{
 				DWORD amount = 0;
-				if (id[element - 1] != NULLENTITY && amountOfEntities != 10) {
-					amountOfEntities++;
-				}
-				else return;
 				ent = L"o";
 				COORD copyOfEntityCoords = entityCoordinates;
 				WriteConsoleOutputCharacter(handle, ent, 1, copyOfEntityCoords, &amount);
@@ -95,9 +96,6 @@ namespace game {
 			bool kill()
 			{
 				DWORD amount = 0;
-				if (id[element - 1] != NULLENTITY && !hasBeenKilled) {
-					amountOfEntities--;
-
 				ent = L" ";
 				COORD copyOfEntityCoords = entityCoordinates;
 				WriteConsoleOutputCharacter(handle, ent, 2, copyOfEntityCoords, &amount);
@@ -107,8 +105,6 @@ namespace game {
 				WriteConsoleOutputCharacter(handle, ent, 2, copyOfEntityCoords, &amount);
 				l.levelInfo(playername + " has left the game!");
 				return true;
-				}
-				else return false;
 			}
 			~Player()
 			{

@@ -41,10 +41,7 @@ namespace game {
 			:savegame(savegame)
 		{
 			::game::Log l = Log::levelInfoId;
-			COORD newPos = { 1, 9 };
-			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
-			newPos = { 0, 1 };
-			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
+			COORD newPos = { 0, 0 };
 			constexpr size_t npos = std::string::npos;
 			int lines = getLines();
 			std::ifstream in_fs;
@@ -63,7 +60,7 @@ namespace game {
 				size_t closingval = values->find('}');
 				if (openingval != std::string::npos && closingval != std::string::npos)
 					*values = values->substr(openingval, closingval - 1);
-				{
+					{
 						// Get Coords
 						// ----------------------------------------
 						int lastElementInX;
@@ -134,40 +131,156 @@ namespace game {
 								y = std::atoi(finalResult1.c_str());
 							}*/
 						}
+					}
 						// ----------------------------------------
-						int debug = 0;
-				}
 					newPos = { x, y };
-					SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 					if (values->contains("GREENERY"))
 					{
-						colorAttributes grass = LIGHTGREEN;
-						std::this_thread::sleep_for(std::chrono::milliseconds(50));
-						std::cout << "[] ";
+						LPCWSTR print = L"[";
+						COORD newPosCpy = newPos;
+						WORD color = LIGHTGREEN;
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
+						newPosCpy.X++;
+						print = L"]";
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
+						newPosCpy.X++;
+						print = L" ";
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
 					}
 					else if (values->contains("ROCK"))
 					{
-						colorAttributes color = LIGHTGRAY;
-						std::this_thread::sleep_for(std::chrono::milliseconds(50));
-						std::cout << "[] ";
+						LPCWSTR print = L"[";
+						COORD newPosCpy = newPos;
+						WORD color = LIGHTGRAY;
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
+						newPosCpy.X++;
+						print = L"]";
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
+						newPosCpy.X++;
+						print = L" ";
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
 					}
 					else if (values->contains("BEDROCK"))
 					{
-						colorAttributes color = LIGHTBLUE;
-						std::this_thread::sleep_for(std::chrono::milliseconds(50));
-						std::cout << "[] ";
+						LPCWSTR print = L"[";
+						COORD newPosCpy = newPos;
+						WORD color = LIGHTBLUE;
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
+						newPosCpy.X++;
+						print = L"]";
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
+						newPosCpy.X++;
+						print = L" ";
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
+
 					}
-				    else if (values->contains("LOG"))
+					else if (values->contains("LOG"))
 					{
-						colorAttributes color = BROWN;
-						std::this_thread::sleep_for(std::chrono::milliseconds(50));
-						std::cout << "[] ";
+						LPCWSTR print = L"[";
+						COORD newPosCpy = newPos;
+						WORD color = BROWN;
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
+						newPosCpy.X++;
+						print = L"]";
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
+						newPosCpy.X++;
+						print = L" ";
+						util::OutputAtCoordW(GetOutputHandle(),
+							1,
+							print,
+							newPosCpy,
+							color
+						);
+
 					}
 					else if (values->contains("WATER"))
 					{
-						colorAttributes color = BLUE;
-						std::this_thread::sleep_for(std::chrono::milliseconds(50));
-						std::cout << "[] ";
+					LPCWSTR print = L"[";
+					COORD newPosCpy = newPos;
+					WORD color = BLUE;
+					util::OutputAtCoordW(GetOutputHandle(),
+						1,
+						print,
+						newPosCpy,
+						color
+					);
+					newPosCpy.X++;
+					print = L"]";
+					util::OutputAtCoordW(GetOutputHandle(),
+						1,
+						print,
+						newPosCpy,
+						color
+					);
+					newPosCpy.X++;
+					print = L" ";
+					util::OutputAtCoordW(GetOutputHandle(),
+						1,
+						print,
+						newPosCpy,
+						color
+					);
+					}
+					else if (values->contains("DELETED_BLOCK"))
+					{
+						SetConsoleCursorPosition(GetOutputHandle(), newPos);
+						Place('\b', buff);
+						SetConsoleCursorPosition(GetOutputHandle(), COORD(0, 8));
 					}
 					else
 					{
