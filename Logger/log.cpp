@@ -18,12 +18,12 @@ int main(int argc, char** argv)
 			of.open("log.txt", std::ofstream::out | std::ofstream::trunc);
 			of.close();
 		}); // Lambada
-	HANDLE mutex = CreateMutexA(0, FALSE, "Local\\$myprogram$"); // try to create a named mutex
-	if (GetLastError() == ERROR_ALREADY_EXISTS) // did the mutex already exist?
-	{
-		ReleaseMutex(mutex);
-		return -1; // quit; mutex is released automatically
-	}
+	//HANDLE mutex = CreateMutexA(0, FALSE, "Local\\$myprogram$"); // try to create a named mutex
+	//if (GetLastError() == ERROR_ALREADY_EXISTS) // did the mutex already exist?
+	//{
+	//	ReleaseMutex(mutex);
+	//	return -1; // quit; mutex is released automatically
+	//}
 	WHILETRUE
 	{
 	std::string str = "";
