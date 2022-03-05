@@ -6,15 +6,13 @@
 1. Press the keys "W", "A", "S" and "D" to move up press "W" to move down press "S" to move to the right press "D" and to move to the left press "A"
 2. To place water press "P", to place bedrock press "B", to place grass/leaves press "G", to place rocks press "R" and to place logs press "L"
 3. To remove something press backspace 
-4. to generate everything press any of the keys to move
 
 
 ##  Known issues
 ### -------------------------------------------------------------------------------------------------------
 1. The colisions to work needs you to send input twice
 2. CTRL-C won't terminate the program anymore - FIXED
-3. The colisions on one side of a water block (see [Step 2](https://github.com/oberrow/cmd-game#how-to-play)) work (they are not supposed to)
-4. when you move it will take you to some text (only in pre release 4) - FIXED
+3. when you move it will take you to some text (only in pre release 4) - FIXED
 
 ## Notes
 ### -------------------------------------------------------------------------------------------------------
