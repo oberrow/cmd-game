@@ -167,12 +167,12 @@ int main(int argc, TCHAR** argv)
 	game::DeleteLog dl;
 	//MessageBox(NULL, TEXT("Test"), TEXT("Testing"), MB_ICONERROR);
 	// Credits : https://stackoverflow.com/a/14176581/16564788
-	HANDLE mutex = CreateMutexA(0, FALSE, "Local\\$myprogram$"); // try to create a named mutex
-	if (GetLastError() == ERROR_ALREADY_EXISTS) // did the mutex already exist?
-	{
-		ReleaseMutex(mutex);
-		return -1; // quit; mutex is released automatically
-	}
+	//HANDLE mutex = CreateMutexA(0, FALSE, "Local\\$myprogram$"); // try to create a named mutex
+	//if (GetLastError() == ERROR_ALREADY_EXISTS) // did the mutex already exist?
+	//{
+	//	ReleaseMutex(mutex);
+	//	return -1; // quit; mutex is released automatically
+	//}
 #if STATE
 	system("start log.exe");
 	auto [savegame, end, use_colisions] = menu(dl);
