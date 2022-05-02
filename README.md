@@ -13,7 +13,7 @@
 1. The colisions to work needs you to send input twice
 2. CTRL-C won't terminate the program anymore - FIXED
 3. when you move it will take you to some text (only in pre release 4) - FIXED
-
+4. Generation doesn't take count of certain blocks being destroyed
 ## Notes
 ### -------------------------------------------------------------------------------------------------------
 1. if the memory usage goes above 15 mb the program will terminate (intentional feature) if this happens try to debug the program and make a bug report
