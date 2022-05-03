@@ -1,3 +1,6 @@
+#include "GlobalVars.hpp"
+
+#if defined(_WIN64) && STATE && CMDGAME
 #include "Start.hpp"
 
 namespace game 
@@ -15,16 +18,15 @@ namespace game
 
 	std::string Start::GetCurrentBlock()
 	{
-		DWORD dwAttribs1;
 		WORD lpAttrib = 0;
-		RCOA(
+		DWORD dwAttribs1;
+		BOOL rcoa = ReadConsoleOutputAttribute(
 			GetStdHandle(STD_OUTPUT_HANDLE),
 			&lpAttrib,
 			1,
-			in_Buffer.dwCursorPosition,
+			game::Movements::coordCpy,
 			&dwAttribs1
 		);
-		
 		if (dwAttribs1 == 0)
 		{
 			return "NULL";
@@ -43,7 +45,7 @@ namespace game
 			{
 				return "WATER";
 			}
-			else if (lpAttrib == LIGHTGRAY)
+			else if (lpAttrib == colors::darkgray)
 			{
 				return "ROCK";
 			}
@@ -59,7 +61,9 @@ namespace game
 	}
 	void Start::save()
 	{
-		std::ofstream fstream{ savegame, std::ios::app };
+		std::string str = savegame;
+		str.append("\\savegame.cmdgamesave");
+		std::ofstream fstream{ str, std::ios::app };
 		//if (getchVal == '\b' && GetCurrentBlock() != "NULL")
 		//{
 		//	std::string currentBlock = GetCurrentBlock();
@@ -82,7 +86,7 @@ namespace game
 		//	return;
 		//}
 		if (!sStream.empty())
-			fstream << sStream;
+			fstream << sStream << std::flush;
 		else
 			return;
 		fstream.close();
@@ -93,27 +97,39 @@ namespace game
 		{
 			setFontSize(18);
 		}
+		if (times == 1)
+		{
+			maxConsoleSize = in_Buffer.dwMaximumWindowSize;
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			generate();
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			game::Generate g{ savegame.c_str(), in_Buffer, true };
+		}
 		dispatch();
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
-		game::Colisions c = in_Buffer;
+		//std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		Colisions* c = nullptr;
+		if(use_colisions)
+			c = new game::Colisions(in_Buffer);
+		if(m_Exp.exp_Gravity)
+			game::Gravity g{ in_Buffer.dwCursorPosition, maxConsoleSize };
 #define MOVE_TO \
-SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c.newPos); \
-game::Movements::coordCpy = c.newPos
+SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c->newPos); \
+game::Movements::coordCpy = c->newPos
 		if (use_colisions)
 		{
-			if (c.isBlockAbove && !c.isBlockRight && !c.isBlockLeft && !c.found && !isPlacingBlock && !game::GlobalVars::BackSpace)
+			if (c->isBlockAbove && !c->isBlockRight && !c->isBlockLeft && !c->found && !isPlacingBlock && !game::GlobalVars::BackSpace)
 			{
 				MOVE_TO;
 			}
-			else if (c.found && !c.isBlockRight && !c.isBlockLeft && !c.isBlockAbove && !isPlacingBlock && !game::GlobalVars::BackSpace)
+			else if (c->found && !c->isBlockRight && !c->isBlockLeft && !c->isBlockAbove && !isPlacingBlock && !game::GlobalVars::BackSpace)
 			{
 				MOVE_TO;
 			}
-			else if (!c.found && c.isBlockRight && !c.isBlockLeft && !c.isBlockAbove && !isPlacingBlock && !game::GlobalVars::BackSpace)
+			else if (!c->found && c->isBlockRight && !c->isBlockLeft && !c->isBlockAbove && !isPlacingBlock && !game::GlobalVars::BackSpace)
 			{
 				MOVE_TO;
 			}
-			else if (!c.found && !c.isBlockRight && c.isBlockLeft && !c.isBlockAbove && !isPlacingBlock && !game::GlobalVars::BackSpace)
+			else if (!c->found && !c->isBlockRight && c->isBlockLeft && !c->isBlockAbove && !isPlacingBlock && !game::GlobalVars::BackSpace)
 			{
 				MOVE_TO;
 			}
@@ -123,32 +139,63 @@ game::Movements::coordCpy = c.newPos
 				isPlacingBlock = false;
 			}
 		}
+		delete c;
 	}
 	void Start::generate(/*int seed*/)
 	{
 		times2++;
-		LPCSTR toPrint = "[] ";
+		if (times == 1)
+		{
 		COORD newPos = { 1, 9 };
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
-		{
-			colorAttributes grassColor = 0x0A;
-			for (int i = 0; i < 56; i++)
-				std::cout << "[] ";
+		int divResult = maxConsoleSize.X / 3;
+			{
+				for (int i = 0; i < divResult; i++)
+				{
+					colorAttributes grassColor = 0x0A;
+					std::cout << "[] ";
+					GetConsoleScreenBufferInfo(
+						GetStdHandle(STD_OUTPUT_HANDLE),
+						&in_Buffer
+					);
+					/*game::block _block{ "GREENERY", COORD(in_Buffer.dwCursorPosition.X, in_Buffer.dwCursorPosition.Y) };
+					GlobalVars::world_map[std::string(std::to_string(in_Buffer.dwCursorPosition.X) + ", " + std::to_string(in_Buffer.dwCursorPosition.Y) + ", GREENERY")] = _block;
+				*/
+				}
+			}
+			{
+				for (int i = 0; i < divResult * 25; i++)
+				{
+					colorAttributes stoneColor = colors::lightgray;
+					std::cout << "[] ";
+					GetConsoleScreenBufferInfo(
+						GetStdHandle(STD_OUTPUT_HANDLE),
+						&in_Buffer
+					);
+					/*game::block _block{ "ROCK", COORD(in_Buffer.dwCursorPosition.X, in_Buffer.dwCursorPosition.Y)};
+					GlobalVars::world_map[std::string(std::to_string(in_Buffer.dwCursorPosition.X) + ", " + std::to_string(in_Buffer.dwCursorPosition.Y) + ", ROCK")] = _block;
+				*/
+				}
+			}
+			{
+				for (int i = 0; i < divResult * 3; i++)
+				{
+					colorAttributes bedrockColor = colors::lightblue;
+					std::cout << "[] ";
+					GetConsoleScreenBufferInfo(
+						GetStdHandle(STD_OUTPUT_HANDLE),
+						&in_Buffer
+					);
+					/*game::block _block{ "BEDROCK", COORD(in_Buffer.dwCursorPosition.X, in_Buffer.dwCursorPosition.Y) };
+					GlobalVars::world_map[std::string(std::to_string(in_Buffer.dwCursorPosition.X) + ", " + std::to_string(in_Buffer.dwCursorPosition.Y) + ", BEDROCK")] = _block;
+				*/
+				}
+			}
+			newPos.X = 0;
+			newPos.Y = 8;
+			game::Movements::coordCpy = newPos;
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 		}
-		{
-			colorAttributes stoneColor = 0x07;
-			for (int i = 0; i < 56 * 25; i++)
-				std::cout << "[] ";
-		}
-		{
-			colorAttributes bedrockColor = 0x09;
-			for (int i = 0; i < 56 * 3; i++)
-				std::cout << "[] ";
-		}
-		newPos.X = 0;
-		newPos.Y = 8;
-		game::Movements::coordCpy = newPos;
-		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), newPos);
 	}
 	void Start::MonitorMemoryUsage()
 	{
@@ -156,12 +203,20 @@ game::Movements::coordCpy = c.newPos
 		// https://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
 		// PS. there is some functions / classes that aren't coded by me (or not entirely coded by me)
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(3));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		PROCESS_MEMORY_COUNTERS_EX pmc{};
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
-		if (physMemUsedByMe >= 15000000)
-			std::abort(); //If the memory usage is going higher then 15mb this line will terminate the program 
+		game::DeleteLog dl;
+		if (physMemUsedByMe >= 3.146e+7)
+		{
+			dl.~DeleteLog();
+#if _MSC_VER >= 1700
+			__fastfail(FAST_FAIL_FATAL_APP_EXIT); //If the memory usage is going higher then 30MiB this line will terminate the program
+#else 
+			std::abort(); //If the memory usage is going higher then 30MiB this line will terminate the program
+#endif
+		}
 	}
 	void Start::dispatch()
 	{
@@ -218,10 +273,10 @@ game::Movements::coordCpy = c.newPos
 		CONSOLE_FONT_INFOEX info = { 0 };
 		info.cbSize = sizeof(info);
 		info.dwFontSize.Y = FontSize;
-		info.FontWeight = FW_NORMAL;
-		wcscpy_s(info.FaceName, (rsize_t)15, L"Consolas");
+		info.FontWeight = FW_BOLD;
+		wcscpy_s(info.FaceName, (rsize_t)32, L"Consolas");
 		//wcscpy(info.FaceName, L"Lucida Console");
 		SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), NULL, &info);
 	}
 }
-                                                                                                                                                  
+#endif

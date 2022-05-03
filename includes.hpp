@@ -1,6 +1,5 @@
 #pragma once
-
-#include "framework.hpp"
+#include <Windows.h>
 #include <iostream>
 #include <string>
 #include <conio.h>
@@ -17,4 +16,5 @@
 #include "GlobalVars.hpp"
 #include "shellapi.h"
 #include <format>
+#include <iomanip>
 #include "../util/util.hpp"

@@ -1,3 +1,4 @@
+#if defined(_WIN64) && STATE && CMDGAME
 #pragma once
 #include "includes.hpp"
 #include "colorAttributes.hpp"
@@ -14,7 +15,7 @@ namespace game {
 			std::cout << space;
 			buff.dwCursorPosition.X += 3;
 			switch (blockId) {
-			case 71:
+			case Keys::G:
 			{
 				{
 					colorAttributes color = LIGHTGREEN;
@@ -22,104 +23,103 @@ namespace game {
 				}
 				//const char* savegame, int blockId, COORD currentCoord
 
-				Movements::coordCpy = buff.dwCursorPosition;
+
 				break;
 			}
-			case 103:
+			case Keys::g:
 			{
 				{
 					colorAttributes color = LIGHTGREEN;
 					std::cout << "[]";
 				}
-				Movements::coordCpy = buff.dwCursorPosition;
+
 				break;
 			}
-			case 114:
+			case Keys::r:
 			{
 				{
-					colorAttributes color = LIGHTGRAY;
+					colorAttributes color = colors::darkgray;
 					std::cout << "[]";
 				}
 
-				Movements::coordCpy = buff.dwCursorPosition;
+
 				break;
 			}
-			case 82:
+			case Keys::R:
 			{
 				{
-					colorAttributes color = LIGHTGRAY;
+					colorAttributes color = colors::darkgray;
 					std::cout << "[]";
 				}
 
-				Movements::coordCpy = buff.dwCursorPosition;
+
 				break;
 			}
-			case 66:
+			case Keys::B:
 			{
 				{
 					colorAttributes color = LIGHTBLUE;
 					std::cout << "[]";
 				} 
 
-				Movements::coordCpy = buff.dwCursorPosition;
+
 				break;
 			}
-			case 98:
+			case Keys::b:
 			{
 				{
 					colorAttributes color = LIGHTBLUE;
 					std::cout << "[]";
 				}
 
-				Movements::coordCpy = buff.dwCursorPosition;
+
 				break;
 			}
-			case 76:
+			case Keys::L:
 			{
 				{
 					colorAttributes color = BROWN;
 					std::cout << "[]";
 				}
 
-				Movements::coordCpy = buff.dwCursorPosition;
+
 				break;
 			}
-			case 108:
+			case Keys::l:
 			{
 				{
 					colorAttributes color = BROWN;
 					std::cout << "[]";
 				}
 
-				Movements::coordCpy = buff.dwCursorPosition;
+
 				break;
 			}
-			case 112:
+			case Keys::p:
 			{
 				{
 					colorAttributes color = BLUE;
 					std::cout << "[]";
 				}
 
-				Movements::coordCpy = buff.dwCursorPosition;
+
 				break;
 			}
-			case 80:
+			case Keys::P:
 			{
 				{
 					colorAttributes color = BLUE;
 					std::cout << "[]";
 				}
 
-				Movements::coordCpy = buff.dwCursorPosition;
+
 				break;
 			}
-			case 8:
+			case Keys::backspace:
 			{
-				colorAttributes color = BLACK;
+				colorAttributes color = LIGHTGRAY;
 				printf_s("  ");
-				buff.dwCursorPosition.X += 2;
-				Movements::coordCpy = buff.dwCursorPosition;
+				Movements::coordCpy.X++;
 				break;
 			}
 			default:
@@ -128,3 +128,4 @@ namespace game {
 		}
 	};
 } 
+#endif

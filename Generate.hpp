@@ -1,3 +1,4 @@
+#if defined(_WIN64) && STATE && CMDGAME
 #pragma once
 #include "includes.hpp"
 #include "Place.hpp"
@@ -20,8 +21,7 @@ namespace game {
 	{
 	private:
 		SHORT x = 0, y = 0;
-		const char* savegame;
-		int getLines()
+		int64_t getLines(std::string savegame)
 		{
 			// Credits : https://stackoverflow.com/questions/3482064/counting-the-number-of-lines-in-a-text-file/3482093#3482093
 			std::ifstream myfile(savegame);
@@ -30,29 +30,37 @@ namespace game {
 			myfile.unsetf(std::ios_base::skipws);
 
 			// count the newlines with an algorithm specialized for counting:
-			unsigned line_count = std::count(
+			int64_t line_count = std::count(
 				std::istream_iterator<char>(myfile),
 				std::istream_iterator<char>(),
 				'\n');
 			return line_count;
 		}
 	public:
-		Generate(const char* savegame, CONSOLE_SCREEN_BUFFER_INFO buff)
-			:savegame(savegame)
+		Generate(const char* savegame, CONSOLE_SCREEN_BUFFER_INFO buff, bool load_player)
 		{
+			std::string savegame_stdstring{ savegame };
+			std::string savegameToCStr = "\\";
+			savegame_stdstring += savegameToCStr += "savegame.cmdgamesave";
 			::game::Log l = Log::levelInfoId;
 			COORD newPos = { 0, 0 };
 			constexpr size_t npos = std::string::npos;
-			int lines = getLines();
+			int64_t lines = getLines(savegame_stdstring);
 			std::ifstream in_fs;
-			in_fs.open(savegame);
+			in_fs.open(savegame_stdstring);
 			std::string* rawContents{ new std::string };
-			if (!std::filesystem::exists(savegame))
-				l.levelError(std::string(savegame) + " doesn't exist! Please make the file first");
+			if (!std::filesystem::exists(savegame_stdstring))
+			{
+				l.levelError(std::string(savegame_stdstring) + " doesn't exist! Please make the file first");
+				return;
+			}
 			if (!in_fs.is_open())
-				l.levelError("Could not open file " + std::string(savegame));
+			{
+				l.levelError("Could not open file " + std::string(savegame_stdstring));
+				return;
+			}
 			else
-				l.levelInfo("Succesfully opened " + std::string(savegame));
+				l.levelInfo("Succesfully opened " + std::string(savegame_stdstring));
 			while (getline(in_fs, *rawContents))
 			{
 				size_t openingval = rawContents->find('{');
@@ -136,159 +144,134 @@ namespace game {
 					newPos = { x, y };
 					if (values->contains("GREENERY"))
 					{
-						LPCWSTR print = L"[";
-						COORD newPosCpy = newPos;
+						LPCWSTR print = L"[] ";
 						WORD color = LIGHTGREEN;
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
-						newPosCpy.X++;
-						print = L"]";
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
-						newPosCpy.X++;
-						print = L" ";
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
+						for (int i = 0; i < 3; i++)
+						{
+							COORD pos = COORD(newPos.X + i, newPos.Y);
+							/*game::block _block{ "GREENERY", COORD(pos) };
+							if (&GlobalVars::world_map != nullptr)
+								GlobalVars::world_map[std::string(std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", GREENERY")] = _block;
+							*/util::OutputAtCoordW(
+								GetStdHandle(STD_OUTPUT_HANDLE),
+								1,
+								&print[i],
+								pos,
+								color
+							);
+						}
 					}
 					else if (values->contains("ROCK"))
 					{
-						LPCWSTR print = L"[";
-						COORD newPosCpy = newPos;
-						WORD color = LIGHTGRAY;
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
-						newPosCpy.X++;
-						print = L"]";
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
-						newPosCpy.X++;
-						print = L" ";
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
+						LPCWSTR print = L"[] ";
+						WORD color = colors::lightgray;
+						for (int i = 0; i < 3; i++)
+						{
+							COORD pos = COORD(newPos.X + i, newPos.Y);
+							/*game::block _block{ "ROCK", COORD(pos) };
+							if(&GlobalVars::world_map != nullptr)
+								GlobalVars::world_map[std::string(std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", ROCK")] = _block;
+							*/util::OutputAtCoordW(
+								GetStdHandle(STD_OUTPUT_HANDLE),
+								1,
+								&print[i],
+								pos,
+								color
+							);
+						}
 					}
 					else if (values->contains("BEDROCK"))
 					{
-						LPCWSTR print = L"[";
-						COORD newPosCpy = newPos;
+						LPCWSTR print = L"[] ";
 						WORD color = LIGHTBLUE;
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
-						newPosCpy.X++;
-						print = L"]";
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
-						newPosCpy.X++;
-						print = L" ";
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
-
+						for (int i = 0; i < 3; i++)
+						{
+							COORD pos = COORD(newPos.X + i, newPos.Y);
+							/*game::block _block{ "BEDROCK", COORD(pos) };
+							if (&GlobalVars::world_map != nullptr)
+								GlobalVars::world_map[std::string(std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", BEDROCK")] = _block;
+							*/util::OutputAtCoordW(
+								GetStdHandle(STD_OUTPUT_HANDLE),
+								1,
+								&print[i],
+								pos,
+								color
+							);
+						}
 					}
 					else if (values->contains("LOG"))
 					{
-						LPCWSTR print = L"[";
-						COORD newPosCpy = newPos;
+						LPCWSTR print = L"[] ";
 						WORD color = BROWN;
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
-						newPosCpy.X++;
-						print = L"]";
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
-						newPosCpy.X++;
-						print = L" ";
-						util::OutputAtCoordW(GetOutputHandle(),
-							1,
-							print,
-							newPosCpy,
-							color
-						);
-
+						for (int i = 0; i < 3; i++)
+						{
+							COORD pos = COORD(newPos.X + i, newPos.Y);
+							/*game::block _block{ "LOG", COORD(pos) };
+							if (&GlobalVars::world_map != nullptr)
+								GlobalVars::world_map[std::string(std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", LOG")] = _block;
+							*/util::OutputAtCoordW(
+								GetStdHandle(STD_OUTPUT_HANDLE),
+								1,
+								&print[i],
+								pos,
+								color
+							);
+						}
 					}
 					else if (values->contains("WATER"))
 					{
-					LPCWSTR print = L"[";
-					COORD newPosCpy = newPos;
-					WORD color = BLUE;
-					util::OutputAtCoordW(GetOutputHandle(),
-						1,
-						print,
-						newPosCpy,
-						color
-					);
-					newPosCpy.X++;
-					print = L"]";
-					util::OutputAtCoordW(GetOutputHandle(),
-						1,
-						print,
-						newPosCpy,
-						color
-					);
-					newPosCpy.X++;
-					print = L" ";
-					util::OutputAtCoordW(GetOutputHandle(),
-						1,
-						print,
-						newPosCpy,
-						color
-					);
+						LPCWSTR print = L"[] ";
+						WORD color = BLUE;
+						for (int i = 0; i < 3; i++)
+						{
+							COORD pos = COORD(newPos.X + i, newPos.Y);
+							/*game::block _block{ "WATER", COORD(pos) };
+							if (&GlobalVars::world_map != nullptr)
+								GlobalVars::world_map[std::string(std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", WATER")] = _block;
+							*/util::OutputAtCoordW(
+								GetStdHandle(STD_OUTPUT_HANDLE),
+								1,
+								&print[i],
+								pos,
+								color
+							);
+						}
 					}
 					else if (values->contains("DELETED_BLOCK"))
 					{
-						SetConsoleCursorPosition(GetOutputHandle(), newPos);
-						Place('\b', buff);
-						SetConsoleCursorPosition(GetOutputHandle(), COORD(0, 8));
+						LPCSTR toPrint = "  ";
+						/*if(&GlobalVars::world_map != nullptr)
+							GlobalVars::world_map.erase(std::string(std::to_string(buff.dwCursorPosition.X) + ", " + std::to_string(buff.dwCursorPosition.Y) + ", WATER"));
+						*/for (int i = 0; i < 3; i++)
+						{
+							util::OutputAtCoordA(
+								GetStdHandle(STD_OUTPUT_HANDLE),
+								1,
+								&toPrint[i],
+								COORD(newPos.X + i, newPos.Y),
+								LIGHTGRAY
+							);
+						}
+					}
+					else if (values->contains("PLAYER") && load_player) 
+					{
+						SetConsoleCursorPosition
+						(
+							GetOutputHandle(),
+							newPos
+						);
+						game::Movements::coordCpy = newPos;
 					}
 					else
 					{
 						if(!values->empty())
 							l.levelError("Error GEN01! Unrecognized block! Current coordinates are X: " + std::to_string(newPos.X) + " Y: " + std::to_string(newPos.Y) + "!");
 					}
+					delete values;
 			}
+			delete rawContents;
 			in_fs.close();
 		}
 	};
 }
+#endif

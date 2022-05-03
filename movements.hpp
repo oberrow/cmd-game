@@ -1,3 +1,4 @@
+#if defined(_WIN64) && STATE && CMDGAME
 #pragma once
 #include "includes.hpp"
 namespace game {
@@ -5,14 +6,14 @@ namespace game {
 	private:
 		inline static int returnVal;
 		inline static CONSOLE_SCREEN_BUFFER_INFO m_scr_buffer{};
-		inline static COORD coordCpy = m_scr_buffer.dwCursorPosition;
 	public:
+		inline static COORD coordCpy = m_scr_buffer.dwCursorPosition;
 		Movements(int key, CONSOLE_SCREEN_BUFFER_INFO buff)
 		{
 			m_scr_buffer = buff;
 			switch (key)
 			{
-			case 119:
+			case Keys::w:
 			{
 				//w key (lowercase)
 				int currentCoordY = coordCpy.Y;
@@ -22,7 +23,7 @@ namespace game {
 					coordCpy.Y--;
 				break;
 			}
-			case 87:
+			case Keys::W:
 			{
 				//W key (Uppercase)
 				int currentCoordY = coordCpy.Y;
@@ -32,7 +33,7 @@ namespace game {
 					coordCpy.Y--;
 				break;
 			}
-			case 115:
+			case Keys::s:
 			{
 				//s key (lowercase)
 				int currentCoordY = coordCpy.Y;
@@ -42,7 +43,7 @@ namespace game {
 					coordCpy.Y++;;
 				break;
 			}
-			case 83:
+			case Keys::S:
 			{
 				//S key (Uppercase)
 				int currentCoordY = coordCpy.Y;
@@ -52,7 +53,7 @@ namespace game {
 					coordCpy.Y++;
 				break;
 			}
-			case 97:
+			case Keys::a:
 			{
 				//a key (lowercase)
 				int currentCoordX = coordCpy.X;
@@ -62,7 +63,7 @@ namespace game {
 					coordCpy.X--;
 				break;
 			}
-			case 65:
+			case Keys::A:
 			{
 				//A key (Uppercase)
 				int currentCoordX = coordCpy.X;
@@ -72,7 +73,7 @@ namespace game {
 					coordCpy.X--;
 				break;
 			}
-			case 100:
+			case Keys::d:
 			{
 				//d key (lowercase)
 				int currentCoordX = coordCpy.X;
@@ -82,7 +83,7 @@ namespace game {
 					coordCpy.X++;
 				break;
 			}
-			case 68:
+			case Keys::D:
 			{
 				//D key (Uppercase)
 				int currentCoordX = coordCpy.X;
@@ -92,7 +93,7 @@ namespace game {
 					coordCpy.X++;
 				break;
 			}
-			case 32:
+			case Keys::space:
 			{
 				//Space key
 
@@ -101,13 +102,9 @@ namespace game {
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 				coordCpy.Y++;
 				SetConsoleCursorPosition(OUT_HANDLE, coordCpy);
-
 			}
-			default:
-				;
 			}
 		}
-		friend class Place;
-		friend class Start;
 	};
-}                                                                                                                                        
+}
+#endif

@@ -1,3 +1,6 @@
+#include "GlobalVars.hpp"
+
+#if defined(_WIN64) && STATE && CMDGAME
 #include "log.hpp"
 
 namespace game {
@@ -44,4 +47,19 @@ namespace game {
 	{
 		m_level = level;
 	}
-}                                                                                                                                                                                                                                                                                 
+	bool Chat::chat(std::string message)
+	{
+		if (m_state)
+		{
+			std::ofstream outfilebuf{ m_chatFile, std::ios::out | std::ios::app };
+			outfilebuf << "[SYSTEM] " << message << '\n' << std::flush;
+			outfilebuf.close();
+		}
+		else
+		{
+			return m_state;
+		}
+		return true;
+	}
+}
+#endif
